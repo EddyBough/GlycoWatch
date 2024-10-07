@@ -1,5 +1,5 @@
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -11,10 +11,13 @@ model User {
   id            Int       @id @default(autoincrement())
   name          String?
   email         String    @unique
+  password      String? 
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  profile       Profile? // relation vers le profil
+  measurements  Measurement[]
 }
 
 model Account {
@@ -23,13 +26,13 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?   @map("refreshToken")
-  access_token      String?   @map("accessToken")
-  expires_at        Int?      @map("expiresAt")
-  token_type        String?
+  refreshToken      String?
+  accessToken       String?
+  expiresAt         Int?
+  tokenType         String?
   scope             String?
-  id_token          String?   @map("idToken")
-  session_state     String?
+  idToken           String?
+  sessionState      String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -52,4 +55,22 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model Profile {
+  id         Int     @id @default(autoincrement())
+  userId     Int     @unique
+  birthdate  DateTime
+  address    String?
+  phone      String?
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Measurement {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  insulinLevel Float
+  date        DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 
