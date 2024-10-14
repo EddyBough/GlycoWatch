@@ -1,16 +1,33 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
+import { redirect, useRouter } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleSignOut = () => {
+    signOut({
+      redirect: false, // Empêche la redirection automatique
+    }).then(() => {
+      toast.success("Déconnexion réussie");
+      setTimeout(() => {
+        router.push("/home");
+      }, 2000); // Attends 2 secondes avant de rediriger
+    });
+  };
+
   return (
     <header>
+      <ToastContainer />
       <nav className="flex items-center justify-between w-full py-4 px-4 text-lg text-gray-700 bg-white">
         <div className="-ml-6">
           <Link href="/">
@@ -94,6 +111,14 @@ export const Navbar = () => {
               >
                 Sign Up
               </Link>
+            </li>
+            <li>
+              <button
+                className="md:p-4 py-2 block hover:text-purple-400 text-purple-600"
+                onClick={handleSignOut}
+              >
+                Sign out
+              </button>
             </li>
           </ul>
         </div>

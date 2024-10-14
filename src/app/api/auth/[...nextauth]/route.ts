@@ -17,7 +17,6 @@ export const authOptions: AuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-    // Ajoutez d'autres providers ici si nécessaire
   ],
   adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET,
@@ -25,19 +24,19 @@ export const authOptions: AuthOptions = {
     strategy: "jwt" as SessionStrategy,
   },
   callbacks: {
-    async session({
-      session,
-      token,
-      user,
-    }: {
-      session: any;
-      token: any;
-      user: any;
-    }) {
+    async session({ session, token }) {
+      const userId = parseInt(token.sub || "", 10); // Convertir l'ID en entier
+      console.log("User ID from token:", userId); // Pour le débogage
       if (session.user) {
-        session.user.id = user.id;
+        session.user.id = userId; // On s'assure que c'est un entier
       }
       return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id;
+      }
+      return token;
     },
   },
 };
