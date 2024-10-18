@@ -9,6 +9,7 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [firstname, setFirstname] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
@@ -22,6 +23,7 @@ export default function SignUp() {
       email,
       password,
       name,
+      firstname,
       birthdate,
       address,
       phone,
@@ -34,6 +36,7 @@ export default function SignUp() {
           email,
           password,
           name,
+          firstname,
           birthdate,
           address,
           phone,
@@ -48,7 +51,7 @@ export default function SignUp() {
 
       if (res.ok) {
         toast.success("Inscription réussie ! Redirection...");
-        setTimeout(() => router.push("/home"), 3000);
+        setTimeout(() => router.push("/dashboard"), 3000);
       } else {
         const data = await res.json();
         toast.error(data.message || "Échec de l'inscription");
@@ -69,6 +72,14 @@ export default function SignUp() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Name"
+          required
+          className="p-2 border rounded"
+        />
+        <input
+          type="text"
+          value={firstname}
+          onChange={(e) => setFirstname(e.target.value)}
+          placeholder="Firstname"
           required
           className="p-2 border rounded"
         />

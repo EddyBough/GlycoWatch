@@ -6,21 +6,23 @@ const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { email, password, name, birthdate, address, phone } = body;
+  const { email, password, name, firstname, birthdate, address, phone } = body;
 
   console.log("Données reçues : ", {
     email,
     password,
     name,
+    firstname,
     birthdate,
     address,
     phone,
   });
 
-  if (!email || !password || !name || !birthdate) {
+  if (!email || !password || !name || !firstname || !birthdate) {
     return NextResponse.json(
       {
-        message: "Email, mot de passe, nom, et date de naissance sont requis",
+        message:
+          "Email, mot de passe, nom, prénom et date de naissance sont requis",
       },
       { status: 400 }
     );
@@ -34,6 +36,7 @@ export async function POST(req: NextRequest) {
         email,
         password: hashedPassword,
         name,
+        firstname,
         profile: {
           create: {
             birthdate: new Date(birthdate),
