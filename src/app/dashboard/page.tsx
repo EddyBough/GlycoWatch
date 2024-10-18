@@ -17,7 +17,7 @@ interface Measurement {
 }
 
 const Dashboard = () => {
-  const { data: session, status } = useSession(); // On
+  const { data: session, status } = useSession();
   const router = useRouter();
   const {
     fetchMeasurements,
@@ -28,25 +28,33 @@ const Dashboard = () => {
 
   const [measurements, setMeasurements] = useState<Measurement[]>([]);
   const [insulinLevel, setInsulinLevel] = useState<string>("");
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date()); // Autorise null
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
   // Redirection si non authentifié
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/signin");
     }
-  }, [status]);
+  }, [status, router]);
 
   // Chargement des mesures
   useEffect(() => {
     const loadMeasurements = async () => {
-      const data: Measurement[] = await fetchMeasurements();
-      setMeasurements(data);
+      if (session?.user?.id) {
+        try {
+          const data = await fetchMeasurements(session.user.id);
+          setMeasurements(Array.isArray(data) ? data : []);
+        } catch (error) {
+          console.error("Erreur lors de la récupération des mesures :", error);
+        }
+      }
     };
-    if (session) {
+
+    // L'effet ne se déclenche que lorsque l'utilisateur est authentifié
+    if (status === "authenticated" && session?.user?.id) {
       loadMeasurements();
     }
-  }, [session]);
+  }, [status, session?.user?.id]); // Utilise uniquement les dépendances nécessaires
 
   // Gestion de l'ajout de mesure
   const handleAddMeasurement = async (e: React.FormEvent) => {
@@ -57,30 +65,27 @@ const Dashboard = () => {
       return;
     }
 
-    const insulinLevelFloat = parseFloat(insulinLevel); // Conversion en float
+    const insulinLevelFloat = parseFloat(insulinLevel);
 
-    // Vérifier si selectedDate n'est pas null avant de l'utiliser
     if (!selectedDate) {
       alert("Veuillez sélectionner une date");
       return;
     }
 
-    console.log("Date sélectionnée :", selectedDate);
-
-    // La date sélectionnée est envoyée ici et stockée dans selectedDate
     const newMeasurement = await addMeasurement(
       session?.user?.id,
       insulinLevelFloat,
-      selectedDate // Utilisation de la date sélectionnée
+      selectedDate
     );
     if (newMeasurement) {
       setMeasurements((prev) => [...prev, newMeasurement]);
-      setInsulinLevel(""); // Réinitialise le champ après ajout
+      setInsulinLevel("");
     }
   };
 
   // Fonction pour obtenir les mesures d'une date donnée
   const getMeasurementsForDate = (date: Date) => {
+    if (!Array.isArray(measurements)) return [];
     return measurements.filter(
       (measurement) =>
         format(new Date(measurement.date), "yyyy-MM-dd") ===
@@ -88,8 +93,9 @@ const Dashboard = () => {
     );
   };
 
-  // Function pour afficher uniquement les mesures de la date selectionnée dans le calendrier
+  // Fonction pour afficher uniquement les mesures de la date sélectionnée dans le calendrier
   const getMeasurementsForSelectedDate = () => {
+    if (!Array.isArray(measurements)) return [];
     return measurements.filter(
       (measurement) =>
         format(new Date(measurement.date), "yyyy-MM-dd") ===
@@ -99,17 +105,23 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1>Bienvenue, {session?.user?.name} !</h1>
+      <h1>
+        Bienvenue,{" "}
+        {session?.user?.firstname
+          ? `${session.user.firstname} ${session.user.name}`
+          : session?.user?.name}{" "}
+        !
+      </h1>
 
       {/* Sélection de la date avec le calendrier */}
       <Calendar
         locale="fr"
         onChange={(value: Date | Date[] | null) => {
           if (value && !Array.isArray(value)) {
-            setSelectedDate(value); // Mettre à jour selectedDate
+            setSelectedDate(value);
           }
         }}
-        value={selectedDate ?? new Date()} // Utiliser la date sélectionnée ou la date actuelle
+        value={selectedDate ?? new Date()}
         tileContent={({ date }) => {
           const dayMeasurements = getMeasurementsForDate(date);
           return (
@@ -125,7 +137,8 @@ const Dashboard = () => {
           );
         }}
       />
-      {/* form et input pour AJOUTER une mesure */}
+
+      {/* Formulaire pour ajouter une mesure */}
       <form onSubmit={handleAddMeasurement}>
         <input
           type="number"
@@ -133,7 +146,6 @@ const Dashboard = () => {
           onChange={(e) => setInsulinLevel(e.target.value)}
           placeholder="Taux d'insuline"
         />
-        {/* Bouton pour AJOUTER une mesure */}
         <button
           type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded"
@@ -142,19 +154,18 @@ const Dashboard = () => {
         </button>
       </form>
 
+      {/* Liste des mesures pour la date sélectionnée */}
       <ul>
-        {/* Pour afficher seulement les mesures du jour du calendrier selectionné */}
         {getMeasurementsForSelectedDate().map((measurement) => (
           <li key={measurement.id}>
             {format(new Date(measurement.date), "dd/MM/yyyy", { locale: fr })} :{" "}
             {measurement.insulinLevel} g/L
             <div className="flex space-x-4">
-              {/* Button pour SUPPRIMER les mesures */}
+              {/* Bouton pour supprimer une mesure */}
               <button
                 className="bg-red-500 text-white py-1 px-2 rounded"
                 onClick={() =>
                   deleteMeasurement(measurement.id, (id) =>
-                    // Vient mettre à jour sans avoir à rafraichir la page
                     setMeasurements((prev) => prev.filter((m) => m.id !== id))
                   )
                 }
@@ -162,10 +173,9 @@ const Dashboard = () => {
                 Supprimer
               </button>
 
-              {/* Button pour MODIFIER les mesures */}
+              {/* Bouton pour modifier une mesure */}
               <button
                 className="bg-green-500 text-white py-1 px-2 rounded"
-                // au clic, newInsulineLevel ouvre une modal ou on saisi la nvlle valeur
                 onClick={() => {
                   const newInsulinLevel = prompt(
                     "Entrez la nouvelle valeur de l'insuline",
@@ -176,7 +186,6 @@ const Dashboard = () => {
                       measurement.id,
                       parseFloat(newInsulinLevel)
                     );
-                    // Vient mettre à jour sans avoir à rafraichir la page
                     setMeasurements((prev) =>
                       prev.map((m) =>
                         m.id === measurement.id

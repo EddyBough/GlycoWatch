@@ -1,13 +1,15 @@
 "use client";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession(); // Pour vérifier l'état de la session
   const router = useRouter();
 
   const toggleMenu = () => {
@@ -104,22 +106,30 @@ export const Navbar = () => {
                 Blog
               </Link>
             </li>
-            <li>
-              <Link
-                className="md:p-4 py-2 block hover:text-purple-400 text-purple-500"
-                href="#"
-              >
-                Sign Up
-              </Link>
-            </li>
-            <li>
-              <button
-                className="md:p-4 py-2 block hover:text-purple-400 text-purple-600"
-                onClick={handleSignOut}
-              >
-                Sign out
-              </button>
-            </li>
+
+            {/* Afficher "Sign Up" uniquement si pas connecté */}
+            {!session && (
+              <li>
+                <Link
+                  className="md:p-4 py-2 block hover:text-purple-400 text-purple-500"
+                  href="/signup"
+                >
+                  Sign Up
+                </Link>
+              </li>
+            )}
+
+            {/* Afficher "Sign Out" uniquement si connecté */}
+            {session && (
+              <li>
+                <button
+                  className="md:p-4 py-2 block hover:text-purple-400 text-purple-600"
+                  onClick={handleSignOut}
+                >
+                  Sign out
+                </button>
+              </li>
+            )}
           </ul>
         </div>
       </nav>
