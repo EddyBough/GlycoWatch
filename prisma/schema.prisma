@@ -10,6 +10,7 @@ generator client {
 model User {
   id            Int       @id @default(autoincrement())
   name          String?
+  firstname     String?   
   email         String    @unique
   password      String? 
   emailVerified DateTime?
@@ -62,6 +63,8 @@ model Profile {
   birthdate  DateTime
   address    String?
   phone      String?
+  medications  String?
+  healthIssues String?
   user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 

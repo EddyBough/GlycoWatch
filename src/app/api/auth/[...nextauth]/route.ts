@@ -38,6 +38,15 @@ export const authOptions: AuthOptions = {
       }
       return token;
     },
+    async redirect({ url, baseUrl }) {
+      // Vérifie si l'utilisateur a été redirigé depuis une autre page avant l'authentification
+      if (url.startsWith(baseUrl)) {
+        return url; // Redirige vers la page d'origine si l'URL est dans le même domaine
+      }
+
+      // Sinon, redirige vers /dashboard
+      return "/dashboard";
+    },
   },
 };
 
