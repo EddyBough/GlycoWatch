@@ -6,8 +6,28 @@ const prisma = new PrismaClient();
 //Route pour récupérer toutes les mesures
 export async function GET(req: NextRequest) {
   try {
-    const measurements = await prisma.measurement.findMany();
-    return NextResponse.json(measurements);
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    // Vérification si l'`userId` est valide
+    if (!userId || isNaN(parseInt(userId))) {
+      return NextResponse.json(
+        { message: "User ID invalide ou manquant" },
+        { status: 400 }
+      );
+    }
+
+    // Récupérer les mesures liées à cet utilisateur uniquement
+    const measurements = await prisma.measurement.findMany({
+      where: {
+        userId: parseInt(userId, 10),
+      },
+      orderBy: {
+        date: "desc",
+      },
+    });
+
+    return NextResponse.json(measurements, { status: 200 });
   } catch (error) {
     console.error("Erreur lors du chargement des mesures :", error);
     return NextResponse.json(
@@ -16,6 +36,7 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
 //Route pour ajouter les nouvelles mesures
 export async function POST(req: NextRequest) {
   const body = await req.json(); // Récupère le corps de la requête

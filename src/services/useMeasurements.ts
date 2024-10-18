@@ -1,10 +1,13 @@
 // src/services/useMeasurements.ts
 
 export const useMeasurements = () => {
-  const fetchMeasurements = async () => {
-    const response = await fetch("/api/measurements");
+  const fetchMeasurements = async (userId: number) => {
+    const response = await fetch(`/api/measurements?userId=${userId}`);
+    if (!response.ok) {
+      throw new Error("Erreur lors de la récupération des mesures");
+    }
     const data = await response.json();
-    return data;
+    return Array.isArray(data) ? data : [];
   };
 
   const addMeasurement = async (
@@ -37,7 +40,7 @@ export const useMeasurements = () => {
       method: "DELETE",
     });
     if (response.ok) {
-      onSuccess(id); // Execute the callback on success
+      onSuccess(id);
     }
     return response.ok;
   };
