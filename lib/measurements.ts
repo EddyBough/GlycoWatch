@@ -1,5 +1,44 @@
-// src/services/useMeasurements.ts
+// src/lib/measurements.ts
+"use server"; // Cette directive garantit que Prisma s'exécute côté serveur
 
+import prisma from "./prisma"; //  client Prisma
+
+// Fonctions côté serveur (utilisant Prisma)
+export async function getMeasurements(userId: number) {
+  return await prisma.measurement.findMany({
+    where: { userId },
+    orderBy: { date: "desc" },
+  });
+}
+
+export async function addMeasurement(
+  userId: number,
+  insulinLevel: number,
+  date: Date
+) {
+  return await prisma.measurement.create({
+    data: {
+      userId,
+      insulinLevel,
+      date: new Date(date),
+    },
+  });
+}
+
+export async function editMeasurement(id: number, insulinLevel: number) {
+  return await prisma.measurement.update({
+    where: { id },
+    data: { insulinLevel },
+  });
+}
+
+export async function deleteMeasurement(id: number) {
+  return await prisma.measurement.delete({
+    where: { id },
+  });
+}
+
+// Fonctions fetch côté client (ancienne logique provenant de useMeasurements.ts)
 export const useMeasurements = () => {
   const fetchMeasurements = async (userId: number) => {
     const response = await fetch(`/api/measurements?userId=${userId}`);

@@ -5,7 +5,13 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { useMeasurements } from "@/services/useMeasurements";
+import {
+  getMeasurements,
+  addMeasurement,
+  editMeasurement,
+  deleteMeasurement,
+} from "../../../lib/measurements";
+// Appels côté serveur
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
@@ -19,13 +25,6 @@ interface Measurement {
 const Dashboard = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const {
-    fetchMeasurements,
-    addMeasurement,
-    editMeasurement,
-    deleteMeasurement,
-  } = useMeasurements();
-
   const [measurements, setMeasurements] = useState<Measurement[]>([]);
   const [insulinLevel, setInsulinLevel] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
@@ -42,7 +41,7 @@ const Dashboard = () => {
     const loadMeasurements = async () => {
       if (session?.user?.id) {
         try {
-          const data = await fetchMeasurements(session.user.id);
+          const data = await getMeasurements(session.user.id); // Appel côté serveur via Prisma
           setMeasurements(Array.isArray(data) ? data : []);
         } catch (error) {
           console.error("Erreur lors de la récupération des mesures :", error);
@@ -164,11 +163,12 @@ const Dashboard = () => {
               {/* Bouton pour supprimer une mesure */}
               <button
                 className="bg-red-500 text-white py-1 px-2 rounded"
-                onClick={() =>
-                  deleteMeasurement(measurement.id, (id) =>
-                    setMeasurements((prev) => prev.filter((m) => m.id !== id))
-                  )
-                }
+                onClick={async () => {
+                  await deleteMeasurement(measurement.id);
+                  setMeasurements((prev) =>
+                    prev.filter((m) => m.id !== measurement.id)
+                  );
+                }}
               >
                 Supprimer
               </button>
@@ -176,13 +176,13 @@ const Dashboard = () => {
               {/* Bouton pour modifier une mesure */}
               <button
                 className="bg-green-500 text-white py-1 px-2 rounded"
-                onClick={() => {
+                onClick={async () => {
                   const newInsulinLevel = prompt(
                     "Entrez la nouvelle valeur de l'insuline",
                     measurement.insulinLevel.toString()
                   );
                   if (newInsulinLevel) {
-                    editMeasurement(
+                    await editMeasurement(
                       measurement.id,
                       parseFloat(newInsulinLevel)
                     );
