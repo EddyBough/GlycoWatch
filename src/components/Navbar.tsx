@@ -118,6 +118,14 @@ export const Navbar = () => {
                 </Link>
               </li>
             )}
+            {/* Afficher "Sign Up" uniquement si pas connecté */}
+            {session && (
+              <li>
+                <Link className="text-blue-500" href="/profile">
+                  Profile
+                </Link>
+              </li>
+            )}
 
             {/* Afficher "Sign Out" uniquement si connecté */}
             {session && (
