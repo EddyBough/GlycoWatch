@@ -32,7 +32,7 @@ export function PresentationPartOne() {
               href="/signup"
               className="group inline-flex items-center bg-white text-purple-600 px-6 md:px-8 py-3 rounded-full border-2 border-purple-600 hover:bg-purple-50 transition-all duration-300"
             >
-              S'inscrire
+              S&rsquo;inscrire
             </a>
           </div>
         </div>
