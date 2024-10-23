@@ -16,6 +16,10 @@ export const Navbar = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleLinkClick = () => {
+    setIsOpen(false);
+  };
+
   const handleSignOut = () => {
     signOut({
       redirect: false, // Empêche la redirection automatique
@@ -30,7 +34,7 @@ export const Navbar = () => {
   return (
     <header>
       <ToastContainer />
-      <nav className="flex items-center justify-between w-full py-4 px-4 text-lg text-gray-700 bg-white">
+      <nav className="flex items-center justify-between w-full py-4 px-4 text-lg text-gray-700 bg-gradient-to-br from-green-100 to-white">
         <div className="-ml-6">
           <Link href="/">
             <img
@@ -49,14 +53,26 @@ export const Navbar = () => {
             <img src="/image/icon-menu.png" alt="Menu" width={24} height={24} />
           </button>
         </div>
+
+        {/* Overlay */}
+        {isOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+            onClick={toggleMenu}
+          ></div>
+        )}
+
+        {/* Mobile Menu */}
         <div
           className={`${
-            isOpen ? "block" : "hidden"
-          } fixed inset-0 bg-white z-10 md:relative md:bg-transparent md:flex md:items-center md:w-auto`}
+            isOpen
+              ? "block bg-gradient-to-br from-green-100 to-white"
+              : "hidden"
+          } fixed inset-0 z-30 md:relative md:flex md:items-center md:w-auto `}
           id="menu"
         >
           <div className="flex justify-between items-center w-full md:hidden p-4">
-            <Link href="/">
+            <Link href="/" onClick={handleLinkClick}>
               <img
                 src="/image/glycowatchLogo.svg"
                 alt="GlycoWatch Logo"
@@ -78,6 +94,7 @@ export const Navbar = () => {
               <Link
                 className="md:p-4 py-2 block hover:text-purple-400"
                 href="#"
+                onClick={handleLinkClick}
               >
                 Features
               </Link>
@@ -86,6 +103,7 @@ export const Navbar = () => {
               <Link
                 className="md:p-4 py-2 block hover:text-purple-400"
                 href="#"
+                onClick={handleLinkClick}
               >
                 Pricing
               </Link>
@@ -94,6 +112,7 @@ export const Navbar = () => {
               <Link
                 className="md:p-4 py-2 block hover:text-purple-400"
                 href="#"
+                onClick={handleLinkClick}
               >
                 Customers
               </Link>
@@ -102,6 +121,7 @@ export const Navbar = () => {
               <Link
                 className="md:p-4 py-2 block hover:text-purple-400"
                 href="#"
+                onClick={handleLinkClick}
               >
                 Blog
               </Link>
@@ -112,17 +132,33 @@ export const Navbar = () => {
               <li>
                 <Link
                   className="md:p-4 py-2 block hover:text-purple-400 text-purple-500"
-                  href="/signup"
+                  href="/signin"
+                  onClick={handleLinkClick}
                 >
-                  Sign Up
+                  Se connecter
+                </Link>
+              </li>
+            )}
+            {!session && (
+              <li>
+                <Link
+                  className="md:p-4 py-2 block hover:text-purple-400 text-purple-500"
+                  href="/signup"
+                  onClick={handleLinkClick}
+                >
+                  S'inscrire
                 </Link>
               </li>
             )}
             {/* Afficher "Sign Up" uniquement si pas connecté */}
             {session && (
               <li>
-                <Link className="text-blue-500" href="/profile">
-                  Profile
+                <Link
+                  className=" text-purple-800"
+                  href="/profile"
+                  onClick={handleLinkClick}
+                >
+                  Profil
                 </Link>
               </li>
             )}
@@ -134,7 +170,7 @@ export const Navbar = () => {
                   className="md:p-4 py-2 block hover:text-purple-400 text-purple-600"
                   onClick={handleSignOut}
                 >
-                  Sign out
+                  Se déconnecter
                 </button>
               </li>
             )}
