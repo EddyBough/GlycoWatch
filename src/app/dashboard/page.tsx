@@ -18,7 +18,7 @@ import { fr } from "date-fns/locale";
 // Définir une interface pour typer Measurement et éviter les erreurs type
 interface Measurement {
   id: number;
-  date: string;
+  date: Date;
   insulinLevel: number;
 }
 
@@ -115,9 +115,11 @@ const Dashboard = () => {
       {/* Sélection de la date avec le calendrier */}
       <Calendar
         locale="fr"
-        onChange={(value: Date | Date[] | null) => {
+        onChange={(value) => {
           if (value && !Array.isArray(value)) {
-            setSelectedDate(value);
+            setSelectedDate(value); // Si c'est une date unique
+          } else if (Array.isArray(value)) {
+            setSelectedDate(value[0]); // Si c'est une plage de dates, tu peux prendre le premier élément
           }
         }}
         value={selectedDate ?? new Date()}

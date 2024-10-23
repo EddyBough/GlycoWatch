@@ -1,148 +1,84 @@
 "use client";
 
-import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import { getProfile, updateProfile } from "../../../lib/profile";
+import ProfilePage from "./ProfilePage"; // Le composant qui affiche les données du profil
+import { getProfile, updateProfile } from "../../../lib/profile"; // Assurez-vous que ces fonctions existent
 
-interface Profile {
-  name: string;
-  firstname: string;
-  birthdate: string;
-  address: string;
-  phone: string;
-  medications: string;
-  healthIssues: string;
-}
-
-const ProfilePage = ({ profile }: { profile: Profile }) => {
-  const { data: session } = useSession();
+export default function Profile() {
+  const { data: session, status } = useSession(); // `session` et `status` sont extraits ici
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    name: profile?.name || "",
-    firstname: profile?.firstname || "",
-    birthdate: profile?.birthdate || "",
-    address: profile?.address || "",
-    phone: profile?.phone || "",
-    medications: profile?.medications || "",
-    healthIssues: profile?.healthIssues || "",
-  });
+  const [profile, setProfile] = useState<UserProfile | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  // Interface pour typer le profil utilisateur
+  interface UserProfile {
+    id: number;
+    userId: number;
+    birthdate: Date | null;
+    address: string | null;
+    phone: string | null;
+    medications: string | null;
+    healthIssues: string | null;
+    name: string; // Ajout de la propriété name
+    firstname: string; // Ajout de la propriété firstname
+  }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (
-      !formData.name ||
-      !formData.firstname ||
-      !formData.birthdate ||
-      !formData.address ||
-      !formData.phone ||
-      !formData.medications ||
-      !formData.healthIssues
-    ) {
-      alert(
-        "Il manque un ou plusieurs champs à remplir pour valider le formulaire !"
-      );
-      return;
+  // Redirection si non connecté
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/signin");
     }
-    if (!session?.user?.id) {
-      alert("Utilisateur non authentifié");
-      return;
+  }, [status, router]);
+
+  // Charger les données de profil si la session est authentifiée
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (session?.user?.id) {
+        try {
+          const data = await getProfile(session.user.id); // Récupérer les données du profil
+
+          if (data) {
+            // Mise à jour des données du profil si elles existent
+            setProfile({
+              id: data.id,
+              userId: data.userId,
+              birthdate: data.birthdate ?? null,
+              address: data.address ?? null,
+              phone: data.phone ?? null,
+              medications: data.medications ?? null,
+              healthIssues: data.healthIssues ?? null,
+              name: data.user?.name ?? "", // Assure qu'on a une chaîne de caractères
+              firstname: data.user?.firstname ?? "", // Assure qu'on a une chaîne de caractères
+            });
+          } else {
+            console.error("Aucune donnée de profil trouvée.");
+          }
+        } catch (error) {
+          console.error("Erreur lors du chargement du profil:", error);
+        }
+      }
+    };
+
+    console.log("Session: ", session);
+    console.log("Status: ", status);
+
+    if (status === "authenticated" && session?.user?.id) {
+      loadProfile(); // Appelle la fonction pour charger le profil
     }
-    await updateProfile(session.user.id, formData);
-    toast.success("Profil mis à jour avec succès");
-    setTimeout(() => {
-      router.push("/dashboard");
-    }, 2000);
-  };
+  }, [status, session]);
+
+  // Si le profil n'est pas encore chargé
+  if (!profile) {
+    return <div>Chargement du profil...</div>;
+  }
 
   return (
     <div>
       <ToastContainer />
-      <h1>Mon Profil</h1>
-      <h1>
-        Profil de :{" "}
-        {session?.user?.firstname
-          ? `${session.user.firstname} ${session.user.name}`
-          : session?.user?.name}{" "}
-      </h1>
-
-      <form onSubmit={handleSubmit}>
-        <label>
-          Name
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Firstname
-          <input
-            type="text"
-            name="firstname"
-            value={formData.firstname}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Date de naissance :
-          <input
-            type="date"
-            name="birthdate"
-            value={formData.birthdate}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Adresse :
-          <input
-            type="text"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Téléphone :
-          <input
-            type="text"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Médicaments :
-          <input
-            type="text"
-            name="medications"
-            value={formData.medications}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Problèmes de santé :
-          <input
-            type="text"
-            name="healthIssues"
-            value={formData.healthIssues}
-            onChange={handleChange}
-          />
-        </label>
-        <button type="submit">Mettre à jour</button>
-      </form>
+      <ProfilePage profile={profile} />{" "}
+      {/* Passe les données au composant ProfilePage */}
     </div>
   );
-};
-
-export default ProfilePage;
+}
