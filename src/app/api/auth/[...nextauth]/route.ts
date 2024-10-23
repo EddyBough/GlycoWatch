@@ -42,10 +42,15 @@ export const authOptions: AuthOptions = {
         }
 
         // Vérification du mot de passe
+        if (!user.password) {
+          throw new Error("Mot de passe non défini pour cet utilisateur");
+        }
+
         const isValid = await bcrypt.compare(
           credentials.password,
           user.password
         );
+
         if (!isValid) {
           throw new Error("Mot de passe incorrect");
         }
