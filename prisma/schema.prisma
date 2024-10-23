@@ -60,7 +60,7 @@ model VerificationToken {
 model Profile {
   id         Int     @id @default(autoincrement())
   userId     Int     @unique
-  birthdate  DateTime
+  birthdate  DateTime?
   address    String?
   phone      String?
   medications  String?
