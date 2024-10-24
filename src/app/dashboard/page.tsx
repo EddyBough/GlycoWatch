@@ -11,11 +11,10 @@ import {
   editMeasurement,
   deleteMeasurement,
 } from "../../../lib/measurements";
-// Appels côté serveur
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { BackgroundDashboard } from "@/components/BackgroundDashboard";
 
-// Définir une interface pour typer Measurement et éviter les erreurs type
 interface Measurement {
   id: number;
   date: Date;
@@ -29,19 +28,17 @@ const Dashboard = () => {
   const [insulinLevel, setInsulinLevel] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
-  // Redirection si non authentifié
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/signin");
     }
   }, [status, router]);
 
-  // Chargement des mesures
   useEffect(() => {
     const loadMeasurements = async () => {
       if (session?.user?.id) {
         try {
-          const data = await getMeasurements(session.user.id); // Appel côté serveur via Prisma
+          const data = await getMeasurements(session.user.id);
           setMeasurements(Array.isArray(data) ? data : []);
         } catch (error) {
           console.error("Erreur lors de la récupération des mesures :", error);
@@ -49,13 +46,11 @@ const Dashboard = () => {
       }
     };
 
-    // L'effet ne se déclenche que lorsque l'utilisateur est authentifié
     if (status === "authenticated" && session?.user?.id) {
       loadMeasurements();
     }
-  }, [status, session?.user?.id]); // Utilise uniquement les dépendances nécessaires
+  }, [status, session?.user?.id]);
 
-  // Gestion de l'ajout de mesure
   const handleAddMeasurement = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -82,7 +77,6 @@ const Dashboard = () => {
     }
   };
 
-  // Fonction pour obtenir les mesures d'une date donnée
   const getMeasurementsForDate = (date: Date) => {
     if (!Array.isArray(measurements)) return [];
     return measurements.filter(
@@ -92,7 +86,6 @@ const Dashboard = () => {
     );
   };
 
-  // Fonction pour afficher uniquement les mesures de la date sélectionnée dans le calendrier
   const getMeasurementsForSelectedDate = () => {
     if (!Array.isArray(measurements)) return [];
     return measurements.filter(
@@ -103,107 +96,179 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1>
-        Bienvenue,{" "}
-        {session?.user?.firstname
-          ? `${session.user.firstname} ${session.user.name}`
-          : session?.user?.name}{" "}
-        !
-      </h1>
+    <div className="min-h-screen bg-gradient-to-b from-[#00cba9]/10 to-white/50">
+      <BackgroundDashboard />
 
-      {/* Sélection de la date avec le calendrier */}
-      <Calendar
-        locale="fr"
-        onChange={(value) => {
-          if (value && !Array.isArray(value)) {
-            setSelectedDate(value); // Si c'est une date unique
-          } else if (Array.isArray(value)) {
-            setSelectedDate(value[0]); // Si c'est une plage de dates, tu peux prendre le premier élément
-          }
-        }}
-        value={selectedDate ?? new Date()}
-        tileContent={({ date }) => {
-          const dayMeasurements = getMeasurementsForDate(date);
-          return (
-            <div>
-              {dayMeasurements.length > 0 && (
-                <ul>
-                  {dayMeasurements.map((measurement) => (
-                    <li key={measurement.id}>{measurement.insulinLevel} g/L</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          );
-        }}
-      />
+      <div className="container relative mx-auto p-4 sm:p-6 lg:p-8">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Bienvenue,{" "}
+            {session?.user?.firstname
+              ? `${session.user.firstname} ${session.user.name}`
+              : session?.user?.name}{" "}
+            !
+          </h1>
+          <p className="text-gray-600">
+            Suivez vos mesures d'insuline quotidiennes
+          </p>
+        </div>
 
-      {/* Formulaire pour ajouter une mesure */}
-      <form onSubmit={handleAddMeasurement}>
-        <input
-          type="number"
-          value={insulinLevel}
-          onChange={(e) => setInsulinLevel(e.target.value)}
-          placeholder="Taux d'insuline"
-        />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded"
-        >
-          Ajouter une mesure
-        </button>
-      </form>
-
-      {/* Liste des mesures pour la date sélectionnée */}
-      <ul>
-        {getMeasurementsForSelectedDate().map((measurement) => (
-          <li key={measurement.id}>
-            {format(new Date(measurement.date), "dd/MM/yyyy", { locale: fr })} :{" "}
-            {measurement.insulinLevel} g/L
-            <div className="flex space-x-4">
-              {/* Bouton pour supprimer une mesure */}
-              <button
-                className="bg-red-500 text-white py-1 px-2 rounded"
-                onClick={async () => {
-                  await deleteMeasurement(measurement.id);
-                  setMeasurements((prev) =>
-                    prev.filter((m) => m.id !== measurement.id)
-                  );
-                }}
-              >
-                Supprimer
-              </button>
-
-              {/* Bouton pour modifier une mesure */}
-              <button
-                className="bg-green-500 text-white py-1 px-2 rounded"
-                onClick={async () => {
-                  const newInsulinLevel = prompt(
-                    "Entrez la nouvelle valeur de l'insuline",
-                    measurement.insulinLevel.toString()
-                  );
-                  if (newInsulinLevel) {
-                    await editMeasurement(
-                      measurement.id,
-                      parseFloat(newInsulinLevel)
-                    );
-                    setMeasurements((prev) =>
-                      prev.map((m) =>
-                        m.id === measurement.id
-                          ? { ...m, insulinLevel: parseFloat(newInsulinLevel) }
-                          : m
-                      )
-                    );
+        <div className="grid gap-8 lg:grid-cols-2">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
+            <div className="calendar-container">
+              <Calendar
+                locale="fr"
+                onChange={(value) => {
+                  if (value && !Array.isArray(value)) {
+                    setSelectedDate(value);
+                  } else if (Array.isArray(value)) {
+                    setSelectedDate(value[0]);
                   }
                 }}
-              >
-                Modifier
-              </button>
+                value={selectedDate ?? new Date()}
+                tileContent={({ date }) => {
+                  const dayMeasurements = getMeasurementsForDate(date);
+                  return dayMeasurements.length > 0 ? (
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {dayMeasurements.map((_, index) => (
+                        <div
+                          key={index}
+                          className="w-1.5 h-1.5 bg-[#00cba9] rounded-full"
+                        />
+                      ))}
+                    </div>
+                  ) : null;
+                }}
+                className="!w-full !border-none !rounded-xl shadow-sm"
+              />
             </div>
-          </li>
-        ))}
-      </ul>
+
+            <form onSubmit={handleAddMeasurement} className="mt-6 space-y-4">
+              <div>
+                <input
+                  type="number"
+                  value={insulinLevel}
+                  onChange={(e) => setInsulinLevel(e.target.value)}
+                  placeholder="Taux d'insuline"
+                  step="0.1"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-[#00cba9] hover:bg-[#00b598] text-white py-3 px-6 rounded-lg transition-colors duration-200 font-medium"
+              >
+                Ajouter une mesure
+              </button>
+            </form>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
+            <h2 className="text-xl font-semibold mb-4">
+              Mesures du{" "}
+              {format(selectedDate ?? new Date(), "dd MMMM yyyy", {
+                locale: fr,
+              })}
+            </h2>
+            <div className="space-y-3">
+              {getMeasurementsForSelectedDate().map((measurement) => (
+                <div
+                  key={measurement.id}
+                  className="flex items-center justify-between p-4 rounded-lg bg-white shadow-sm"
+                >
+                  <div>
+                    <p className="text-lg font-medium">
+                      {measurement.insulinLevel} g/L
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {format(new Date(measurement.date), "HH:mm", {
+                        locale: fr,
+                      })}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={async () => {
+                        const newInsulinLevel = prompt(
+                          "Entrez la nouvelle valeur de l'insuline",
+                          measurement.insulinLevel.toString()
+                        );
+                        if (newInsulinLevel) {
+                          await editMeasurement(
+                            measurement.id,
+                            parseFloat(newInsulinLevel)
+                          );
+                          setMeasurements((prev) =>
+                            prev.map((m) =>
+                              m.id === measurement.id
+                                ? {
+                                    ...m,
+                                    insulinLevel: parseFloat(newInsulinLevel),
+                                  }
+                                : m
+                            )
+                          );
+                        }
+                      }}
+                      className="p-2 text-gray-600 hover:text-[#00cba9] transition-colors"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={async () => {
+                        if (
+                          confirm(
+                            "Êtes-vous sûr de vouloir supprimer cette mesure ?"
+                          )
+                        ) {
+                          await deleteMeasurement(measurement.id);
+                          setMeasurements((prev) =>
+                            prev.filter((m) => m.id !== measurement.id)
+                          );
+                        }
+                      }}
+                      className="p-2 text-gray-600 hover:text-red-500 transition-colors"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M3 6h18" />
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {getMeasurementsForSelectedDate().length === 0 && (
+                <p className="text-center text-gray-500 py-8">
+                  Aucune mesure pour cette date
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,0 +1,7 @@
+"use client";
+
+export function BackgroundDashboard() {
+  return (
+    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQ0MCIgaGVpZ2h0PSI1MDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0wLDI1Nkw0OCwyNjEuM0M5NiwyNjcsMTkyLDI3NywyODgsMjQ1LjNDMzg0LDIxMyw0ODAsMTM5LDU3NiwxMjIuN0M2NzIsMTA3LDc2OCwxNDksODY0LDE4MS4zQzk2MCwyMTMsMTA1NiwyMzUsMTE1MiwyMTguN0MxMjQ4LDIwMywxMzQ0LDE0OSwxMzkyLDEyMi43TDE0NDAsOTZMMTQ0MCwxNjAwTDEzOTIsMTYwMEMxMzQ0LDE2MDAsMTI0OCwxNjAwLDExNTIsMTYwMEMxMDU2LDE2MDAsOTYwLDE2MDAsODY0LDE2MDbdndy4LDE2MDAsNjcyLDE2MDAsNTc2LDE2MDbdndq4MCwxNjAwLDM4NCwxNjAwLDI4OCwxNjAwQzE5MiwxNjAwLDk2LDE2MDAsNDgsMTYwMEwwLDE2MDBaIiBmaWxsPSIjMDBjYmE5IiBmaWxsLW9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')] bg-cover opacity-50 pointer-events-none" />
+  );
+}
