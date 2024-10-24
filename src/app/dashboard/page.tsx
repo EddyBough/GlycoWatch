@@ -109,7 +109,7 @@ const Dashboard = () => {
             !
           </h1>
           <p className="text-gray-600">
-            Suivez vos mesures d'insuline quotidiennes
+            Suivez vos mesures d&apos;insuline quotidiennes
           </p>
         </div>
 
