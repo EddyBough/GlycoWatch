@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "seed": "node --loader ts-node/esm seed.ts",
+    "vercel-build": "prisma generate && prisma migrate deploy && next build"
     
   },
   "dependencies": {
