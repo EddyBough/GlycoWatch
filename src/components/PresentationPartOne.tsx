@@ -3,11 +3,11 @@ import React from "react";
 export function PresentationPartOne() {
   return (
     <section className="mb-16 w-full">
-      <h1 className="text-4xl md:text-5xl font-bold text-purple-900 mb-8">
+      <h1 className="text-4xl md:text-5xl font-bold text-purple-900 mb-8 text-center lg:text-start">
         GlycoWatch
       </h1>
       <div className="flex flex-col md:flex-row items-start justify-between gap-12">
-        <div className="w-full md:w-1/2 flex flex-col">
+        <div className="w-full md:w-1/2 flex flex-col bg-white/20 backdrop-blur-sm rounded-2xl shadow-xl p-6 mb-8">
           <p className="text-lg text-gray-700 mb-6">
             Bienvenue sur notre toute nouvelle application, celle ci évoluera au
             fil du temps pour proposer toujours plus de fonctionnalités
@@ -19,7 +19,8 @@ export function PresentationPartOne() {
           </p>
           <p className="text-lg text-gray-700 mb-8">
             Vous pouvez également partager en toute discrétion vos données avec
-            vos proches ou votre médecin.
+            vos proches ou votre médecin. Nous ne partageons aucune donnée avec
+            personne.
           </p>
           <div className="flex flex-wrap gap-4">
             <a
@@ -36,7 +37,7 @@ export function PresentationPartOne() {
             </a>
           </div>
         </div>
-        <div className="w-full md:w-1/2">
+        <div className="w-full md:w-1/2 lg:mt-9">
           <img
             src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=500"
             alt="Medical App Interface"
