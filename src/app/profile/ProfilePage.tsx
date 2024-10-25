@@ -5,13 +5,14 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import { updateProfile } from "../../../lib/profile";
+import { BackgroundDashboard } from "@/components/BackgroundDashboard";
 
 interface UserProfile {
   id: number;
   userId: number;
   name: string;
   firstname: string;
-  birthdate: Date | null; // Ajouter | null
+  birthdate: Date | null;
   address: string | null;
   phone: string | null;
   medications: string | null;
@@ -24,13 +25,12 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
   const [formData, setFormData] = useState({
     name: profile?.name || "",
     firstname: profile?.firstname || "",
-    birthdate: profile?.birthdate ?? "", // Utiliser ?? au lieu de ||
+    birthdate: profile?.birthdate ?? "",
     address: profile?.address ?? "",
     phone: profile?.phone ?? "",
     medications: profile?.medications ?? "",
     healthIssues: profile?.healthIssues ?? "",
   });
-  console.log(session);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -51,13 +51,11 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
       !formData.medications ||
       !formData.healthIssues
     ) {
-      alert(
-        "Il manque un ou plusieurs champs à remplir pour valider le formulaire !"
-      );
+      toast.error("Veuillez remplir tous les champs du formulaire");
       return;
     }
     if (!session?.user?.id) {
-      alert("Utilisateur non authentifié");
+      toast.error("Utilisateur non authentifié");
       return;
     }
     await updateProfile(session.user.id, formData);
@@ -68,86 +66,139 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-b from-[#00cba9]/10 to-white/50">
+      <BackgroundDashboard />
       <ToastContainer />
-      <h1>Mon Profil</h1>
-      <h1>
-        Profil de :{" "}
-        {session?.user?.firstname
-          ? `${session.user.firstname} ${session.user.name}`
-          : session?.user?.name}{" "}
-      </h1>
 
-      <form onSubmit={handleSubmit}>
-        <label>
-          Name
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Firstname
-          <input
-            type="text"
-            name="firstname"
-            value={formData.firstname}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Date de naissance :
-          <input
-            type="date"
-            name="birthdate"
-            value={
-              formData.birthdate
-                ? new Date(formData.birthdate).toISOString().split("T")[0]
-                : ""
-            }
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Adresse :
-          <input
-            type="text"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Téléphone :
-          <input
-            type="text"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Médicaments :
-          <input
-            type="text"
-            name="medications"
-            value={formData.medications}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Problèmes de santé :
-          <input
-            type="text"
-            name="healthIssues"
-            value={formData.healthIssues}
-            onChange={handleChange}
-          />
-        </label>
-        <button type="submit">Mettre à jour</button>
-      </form>
+      <div className="container relative mx-auto p-4 sm:p-6 lg:p-8">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Mon Profil</h1>
+          <p className="text-gray-600">
+            Profil de{" "}
+            <span className="font-medium">
+              {session?.user?.firstname
+                ? `${session.user.firstname} ${session.user.name}`
+                : session?.user?.name}
+            </span>
+          </p>
+        </div>
+
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 block">
+                  Nom
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  placeholder="Votre nom"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 block">
+                  Prénom
+                </label>
+                <input
+                  type="text"
+                  name="firstname"
+                  value={formData.firstname}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  placeholder="Votre prénom"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 block">
+                  Date de naissance
+                </label>
+                <input
+                  type="date"
+                  name="birthdate"
+                  value={
+                    formData.birthdate
+                      ? new Date(formData.birthdate).toISOString().split("T")[0]
+                      : ""
+                  }
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 block">
+                  Téléphone
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  placeholder="Votre numéro de téléphone"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 block">
+                Adresse
+              </label>
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                placeholder="Votre adresse complète"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 block">
+                Médicaments
+              </label>
+              <input
+                type="text"
+                name="medications"
+                value={formData.medications}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                placeholder="Liste de vos médicaments"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 block">
+                Problèmes de santé
+              </label>
+              <input
+                type="text"
+                name="healthIssues"
+                value={formData.healthIssues}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                placeholder="Vos problèmes de santé"
+              />
+            </div>
+
+            <div className="pt-4">
+              <button
+                type="submit"
+                className="w-full bg-[#00cba9] hover:bg-[#00b598] text-white py-3 px-6 rounded-lg transition-colors duration-200 font-medium"
+              >
+                Mettre à jour le profil
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };
