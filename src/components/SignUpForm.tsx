@@ -53,6 +53,10 @@ export default function SignUp() {
         setTimeout(() => router.push("/dashboard"), 3000);
       } else {
         const data = await res.json();
+        if (res.status === 409) {
+          // cas où le compte existe deja
+          toast.error("Un compte existe déjà avec cet email !");
+        }
         toast.error(data.message || "Échec de l'inscription");
       }
     } catch (error) {
