@@ -66,10 +66,16 @@ const Dashboard = () => {
       return;
     }
 
+    // Créer une nouvelle date en combinant la date sélectionnée et l'heure actuelle
+    const currentTime = new Date();
+    const dateWithTime = new Date(
+      selectedDate.setHours(currentTime.getHours(), currentTime.getMinutes())
+    );
+
     const newMeasurement = await addMeasurement(
       session?.user?.id,
       insulinLevelFloat,
-      selectedDate
+      dateWithTime
     );
     if (newMeasurement) {
       setMeasurements((prev) => [...prev, newMeasurement]);
