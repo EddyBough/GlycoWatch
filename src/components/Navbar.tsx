@@ -90,44 +90,18 @@ export const Navbar = () => {
             </button>
           </div>
           <ul className="flex flex-col items-center gap-4 mt-4 text-gray-700 md:flex-row md:mt-0">
-            <li>
-              <Link
-                className="md:p-4 py-2 block hover:text-purple-400"
-                href="#"
-                onClick={handleLinkClick}
-              >
-                Features
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="md:p-4 py-2 block hover:text-purple-400"
-                href="#"
-                onClick={handleLinkClick}
-              >
-                Pricing
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="md:p-4 py-2 block hover:text-purple-400"
-                href="#"
-                onClick={handleLinkClick}
-              >
-                Customers
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="md:p-4 py-2 block hover:text-purple-400"
-                href="#"
-                onClick={handleLinkClick}
-              >
-                Blog
-              </Link>
-            </li>
-
-            {/* Afficher "Sign Up" uniquement si pas connecté */}
+            {/* Afficher "Dashboard" si connecté */}
+            {session && (
+              <li>
+                <Link
+                  className=" text-purple-800"
+                  href="/dashboard"
+                  onClick={handleLinkClick}
+                >
+                  Dashboard
+                </Link>
+              </li>
+            )}
             {!session && (
               <li>
                 <Link
