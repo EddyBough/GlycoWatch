@@ -14,6 +14,7 @@ import {
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { BackgroundDashboard } from "@/components/BackgroundDashboard";
+import GetMeasurementMonthly from "@/components/GetMeasurementMonthly";
 
 interface Measurement {
   id: number;
@@ -115,9 +116,13 @@ const Dashboard = () => {
             !
           </h1>
           <p className="text-gray-600">
-            Suivez vos mesures d&apos;insuline quotidiennes
+            Suivez vos mesures de glycémie quotidiennes
           </p>
         </div>
+        {/* Intégrer le composant ici */}
+        {session?.user?.id && (
+          <GetMeasurementMonthly userId={session.user.id} />
+        )}
 
         <div className="grid gap-8 lg:grid-cols-2">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
@@ -155,7 +160,7 @@ const Dashboard = () => {
                   type="number"
                   value={insulinLevel}
                   onChange={(e) => setInsulinLevel(e.target.value)}
-                  placeholder="Taux d'insuline"
+                  placeholder="Taux de glycémie"
                   step="0.1"
                   className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
                 />
