@@ -9,32 +9,37 @@ import "react-toastify/dist/ReactToastify.css";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: session } = useSession(); // Pour vérifier l'état de la session
+  const { data: session } = useSession();
   const router = useRouter();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+    // Empêcher le défilement du body quand le menu est ouvert
+    if (!isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
   };
 
   const handleLinkClick = () => {
     setIsOpen(false);
+    document.body.style.overflow = "unset";
   };
 
   const handleSignOut = () => {
-    signOut({
-      redirect: false, // Empêche la redirection automatique
-    }).then(() => {
+    signOut({ redirect: false }).then(() => {
       toast.success("Déconnexion réussie");
       setTimeout(() => {
         router.push("/home");
-      }, 2000); // Attends 2 secondes avant de rediriger
+      }, 2000);
     });
   };
 
   return (
-    <header>
+    <header className="relative z-50">
       <ToastContainer />
-      <nav className="flex items-center justify-between w-full py-4 px-4 text-lg text-gray-700 bg-gradient-to-br from-green-100 to-white">
+      <nav className="flex items-center justify-between w-full py-4 px-4 text-lg text-gray-700 border border-gray-200/30 shadow-lg">
         <div className="-ml-6">
           <Link href="/">
             <img
@@ -54,101 +59,114 @@ export const Navbar = () => {
           </button>
         </div>
 
-        {/* Overlay */}
-        {isOpen && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
-            onClick={toggleMenu}
-          ></div>
-        )}
-
-        {/* Mobile Menu */}
+        {/* Menu mobile et desktop */}
         <div
-          className={`${
-            isOpen
-              ? "block bg-gradient-to-br from-green-100 to-white"
-              : "hidden"
-          } fixed inset-0 z-30 md:relative md:flex md:items-center md:w-auto `}
-          id="menu"
+          className={`
+            ${isOpen ? "flex" : "hidden"}
+            fixed inset-0 md:relative
+            md:flex md:items-center md:w-auto
+            md:bg-transparent bg-transparent
+          `}
         >
-          <div className="flex justify-between items-center w-full md:hidden p-4">
-            <Link href="/" onClick={handleLinkClick}>
-              <img
-                src="/image/glycowatchLogo.svg"
-                alt="GlycoWatch Logo"
-                width={150}
-                height={32}
-              />
-            </Link>
-            <button onClick={toggleMenu} className="h-6 w-6">
-              <img
-                src="/image/icon-close.png"
-                alt="Close"
-                width={24}
-                height={24}
-              />
-            </button>
-          </div>
-          <ul className="flex flex-col items-center gap-4 mt-4 text-gray-700 md:flex-row md:mt-0">
-            {/* Afficher "Dashboard" si connecté */}
-            {session && (
-              <li>
-                <Link
-                  className=" text-purple-800"
-                  href="/dashboard"
-                  onClick={handleLinkClick}
-                >
-                  Dashboard
-                </Link>
-              </li>
-            )}
-            {!session && (
-              <li>
-                <Link
-                  className="md:p-4 py-2 block hover:text-purple-400 text-purple-500"
-                  href="/signin"
-                  onClick={handleLinkClick}
-                >
-                  Se connecter
-                </Link>
-              </li>
-            )}
-            {!session && (
-              <li>
-                <Link
-                  className="md:p-4 py-2 block hover:text-purple-400 text-purple-500"
-                  href="/signup"
-                  onClick={handleLinkClick}
-                >
-                  S&rsquo;inscrire
-                </Link>
-              </li>
-            )}
-            {/* Afficher "Sign Up" uniquement si pas connecté */}
-            {session && (
-              <li>
-                <Link
-                  className=" text-purple-800"
-                  href="/profile"
-                  onClick={handleLinkClick}
-                >
-                  Profil
-                </Link>
-              </li>
-            )}
+          {/* Overlay sombre avec flou */}
+          <div
+            className={`
+              fixed inset-0 
+              bg-white/90 backdrop-blur-sm
+              -z-10 
+              md:hidden
+            `}
+            onClick={toggleMenu}
+          />
 
-            {/* Afficher "Sign Out" uniquement si connecté */}
-            {session && (
-              <li>
-                <button
-                  className="md:p-4 py-2 block hover:text-purple-400 text-purple-600"
-                  onClick={handleSignOut}
-                >
-                  Se déconnecter
-                </button>
-              </li>
-            )}
-          </ul>
+          {/* Container du menu mobile */}
+          <div
+            className="
+            min-h-screen w-[100%] ml-auto
+            bg-transparent shadow-lg
+            flex flex-col
+            md:min-h-0 md:w-auto md:shadow-none md:bg-transparent
+            md:flex-row md:items-center
+          "
+          >
+            {/* Header du menu mobile */}
+            <div className="flex justify-between items-center backdrop-blur-md md:hidden">
+              <Link href="/" onClick={handleLinkClick}>
+                <img
+                  src="/image/glycowatchLogo.svg"
+                  alt="GlycoWatch Logo"
+                  width={150}
+                  height={32}
+                />
+              </Link>
+              <button onClick={toggleMenu} className="h-6 w-6 mr-7">
+                <img
+                  src="/image/icon-close.png"
+                  alt="Close"
+                  width={24}
+                  height={24}
+                />
+              </button>
+            </div>
+
+            {/* Liste des liens */}
+            <ul className="flex flex-col text-center lg:space-x-6 gap-4 p-4 md:flex-row md:p-0">
+              {session && (
+                <li>
+                  <Link
+                    className="block py-2 text-purple-600 hover:text-purple-600"
+                    href="/dashboard"
+                    onClick={handleLinkClick}
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+              )}
+              {!session && (
+                <li>
+                  <Link
+                    className="block py-2 text-purple-600 hover:text-purple-400"
+                    href="/signin"
+                    onClick={handleLinkClick}
+                  >
+                    Se connecter
+                  </Link>
+                </li>
+              )}
+              {!session && (
+                <li>
+                  <Link
+                    className="block py-2 text-purple-600 hover:text-purple-400"
+                    href="/signup"
+                    onClick={handleLinkClick}
+                  >
+                    S'inscrire
+                  </Link>
+                </li>
+              )}
+              {session && (
+                <li>
+                  <Link
+                    className="block py-2 text-purple-600 hover:text-purple-600"
+                    href="/profile"
+                    onClick={handleLinkClick}
+                  >
+                    Profil
+                  </Link>
+                </li>
+              )}
+              {session && (
+                <li>
+                  <button
+                    className="block w-full py-2 text-purple-600 text-center hover:text-purple-400"
+                    onClick={handleSignOut}
+                  >
+                    Se déconnecter
+                  </button>
+                </li>
+              )}
+            </ul>
+          </div>
         </div>
       </nav>
     </header>
