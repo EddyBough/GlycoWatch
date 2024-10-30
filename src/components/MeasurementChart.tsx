@@ -81,7 +81,8 @@ export default function MeasurementChart({
   return (
     <div className="container bg-white p-6 rounded-xl shadow-lg w-full max-h-[400px]">
       <h2 className="text-xl font-semibold mb-4">
-        Évolution du niveau d'insuline - {selectedDate?.toLocaleDateString()}
+        Évolution du niveau d&apos;insuline -{" "}
+        {selectedDate?.toLocaleDateString()}
       </h2>
       <Line
         data={chartData}
