@@ -15,6 +15,7 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { BackgroundDashboard } from "@/components/BackgroundDashboard";
 import GetMeasurementMonthly from "@/components/GetMeasurementMonthly";
+import MeasurementChart from "@/components/MeasurementChart";
 
 interface Measurement {
   id: number;
@@ -119,10 +120,6 @@ const Dashboard = () => {
             Suivez vos mesures de glycémie quotidiennes
           </p>
         </div>
-        {/* Intégrer le composant ici */}
-        {session?.user?.id && (
-          <GetMeasurementMonthly userId={session.user.id} />
-        )}
 
         <div className="grid gap-8 lg:grid-cols-2">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
@@ -278,6 +275,17 @@ const Dashboard = () => {
               )}
             </div>
           </div>
+          <div>
+            {session?.user.id && (
+              <MeasurementChart
+                measurements={measurements}
+                selectedDate={selectedDate}
+              />
+            )}
+          </div>
+          {session?.user?.id && (
+            <GetMeasurementMonthly userId={session.user.id} />
+          )}
         </div>
       </div>
     </div>

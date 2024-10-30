@@ -42,7 +42,7 @@ export default function GetMeasurementMonthly({ userId }: { userId: number }) {
   };
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-8">
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 lg:mt-0 mt-8 mb-8">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">Mesures du mois</h2>
 
       <div className="flex space-x-2 mb-4">
