@@ -39,7 +39,7 @@ export function PresentationPartOne() {
         </div>
         <div className="w-full md:w-1/2 lg:mt-9">
           <img
-            src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=500"
+            src="/image/capturedashboard.png"
             alt="Medical App Interface"
             className="rounded-2xl shadow-2xl w-full max-w-md mx-auto transform hover:scale-105 transition-transform duration-300"
           />

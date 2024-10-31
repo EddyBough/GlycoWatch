@@ -27,7 +27,7 @@ export function PresentationPartTwo() {
         </div>
         <div className="w-full md:w-1/2 lg:mt-9">
           <img
-            src="https://images.unsplash.com/photo-1543333995-a78aea2eee50?auto=format&fit=crop&w=500"
+            src="/image/freedom-image.jpg"
             alt="Glucose Chart"
             className="rounded-2xl shadow-2xl w-full max-w-md mx-auto transform hover:scale-105 transition-transform duration-300"
           />
