@@ -15,7 +15,8 @@ export function PresentationPartOne() {
           </p>
           <p className="text-lg text-gray-700 mb-6">
             Inscrivez vous afin de pouvoir utiliser toute nos fonctionnalités.
-            Plus besoin de tout écrire sur papier, GlycoWatch est là pour vous !
+            Plus besoin de tout écrire sur papier, GlycoWatch® est là pour vous
+            !
           </p>
           <p className="text-lg text-gray-700 mb-8">
             Vous pouvez également partager en toute discrétion vos données avec

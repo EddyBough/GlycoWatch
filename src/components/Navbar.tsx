@@ -32,6 +32,7 @@ export const Navbar = () => {
       toast.success("Déconnexion réussie");
       setTimeout(() => {
         router.push("/home");
+        handleLinkClick();
       }, 2000);
     });
   };
@@ -111,6 +112,24 @@ export const Navbar = () => {
 
             {/* Liste des liens */}
             <ul className="flex flex-col text-center lg:space-x-6 gap-4 p-4 md:flex-row md:p-0">
+              <li>
+                <Link
+                  className="block py-2 text-purple-600 hover:text-purple-600"
+                  href="/privacy"
+                  onClick={handleLinkClick}
+                >
+                  Vie privée
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="block py-2 text-purple-600 hover:text-purple-600"
+                  href="/terms"
+                  onClick={handleLinkClick}
+                >
+                  Condition d'&apos;utilisation
+                </Link>
+              </li>
               {session && (
                 <li>
                   <Link

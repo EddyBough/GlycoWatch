@@ -9,11 +9,11 @@ export function PresentationPartTwo() {
       <div className="flex flex-col md:flex-row-reverse items-start justify-between gap-12 ">
         <div className="w-full md:w-1/2 bg-white/20 backdrop-blur-sm rounded-2xl shadow-xl p-6 mb-8">
           <p className="text-lg text-gray-700 mb-6">
-            GlycoWatch analyse vos données facilement pour vous aider à mieux
+            GlycoWatch® analyse vos données facilement pour vous aider à mieux
             gérer votre diabète
           </p>
           <p className="text-lg text-gray-700 mb-6">
-            GlycoWatch vous présente clairement vos données et journaux
+            GlycoWatch® vous présente clairement vos données et journaux
             quotidiens, elle est idéale que vous soyez diabétique de Type 1,
             Type 2 ou que vous soyez enceinte avec un diabète gestationnel.
           </p>
