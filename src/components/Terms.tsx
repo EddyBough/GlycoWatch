@@ -60,8 +60,8 @@ export function Terms() {
           </h3>
           <p className="text-lg text-gray-700 mb-6 leading-relaxed">
             Nous nous réservons le droit de modifier les présentes conditions
-            pour des raisons de conformité ou d'amélioration des services. Vous
-            serez informé de toute modification significative.
+            pour des raisons de conformité ou d&apos;amélioration des services.
+            Vous serez informé de toute modification significative.
           </p>
 
           <h3 className="text-xl font-bold mb-2">6. Contact</h3>

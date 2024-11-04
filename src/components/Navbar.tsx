@@ -127,7 +127,7 @@ export const Navbar = () => {
                   href="/terms"
                   onClick={handleLinkClick}
                 >
-                  Condition d'&apos;utilisation
+                  Condition d&apos;utilisation
                 </Link>
               </li>
               {session && (
