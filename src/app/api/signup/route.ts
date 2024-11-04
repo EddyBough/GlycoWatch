@@ -10,16 +10,6 @@ export async function POST(req: NextRequest) {
     const { email, password, name, firstname, birthdate, address, phone } =
       body;
 
-    console.log("Données reçues : ", {
-      email,
-      password,
-      name,
-      firstname,
-      birthdate,
-      address,
-      phone,
-    });
-
     if (!email || !password || !name || !firstname || !birthdate) {
       return NextResponse.json(
         {

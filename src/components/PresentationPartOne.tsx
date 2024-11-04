@@ -4,7 +4,7 @@ export function PresentationPartOne() {
   return (
     <section className="mb-16 w-full">
       <h1 className="text-4xl md:text-5xl font-bold text-purple-900 mb-8 text-center lg:text-start">
-        GlycoWatch
+        GlycoWatch®
       </h1>
       <div className="flex flex-col md:flex-row items-start justify-between gap-12">
         <div className="w-full md:w-1/2 flex flex-col bg-white/20 backdrop-blur-sm rounded-2xl shadow-xl p-6 mb-8">
