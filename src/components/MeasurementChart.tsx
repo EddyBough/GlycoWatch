@@ -68,7 +68,7 @@ export default function MeasurementChart({
       labels: labels,
       datasets: [
         {
-          label: "Niveau d'insuline",
+          label: "Niveau de glycémie",
           data: data,
           fill: false,
           borderColor: "#00cba9",
@@ -81,8 +81,7 @@ export default function MeasurementChart({
   return (
     <div className="container bg-white p-6 rounded-xl shadow-lg w-full max-h-[400px]">
       <h2 className="text-xl font-semibold mb-4">
-        Évolution du niveau d&apos;insuline -{" "}
-        {selectedDate?.toLocaleDateString()}
+        Évolution du niveau de glycémie - {selectedDate?.toLocaleDateString()}
       </h2>
       <Line
         data={chartData}
@@ -112,7 +111,7 @@ export default function MeasurementChart({
             },
             y: {
               display: true,
-              title: { display: true, text: "Niveau d'insuline (g/L)" },
+              title: { display: true, text: "Niveau de glycémie (mg/L)" },
               ticks: {
                 font: {
                   size: 10,
