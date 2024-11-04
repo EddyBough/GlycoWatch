@@ -42,13 +42,13 @@ export function Footer() {
                 À propos
               </Link>
               <Link
-                href="/"
+                href="https://glyco-watch.vercel.app/privacy"
                 className="block text-gray-600 hover:text-[#00cba9] transition-colors"
               >
                 Politique de confidentialité
               </Link>
               <Link
-                href="/"
+                href="https://glyco-watch.vercel.app/terms"
                 className="block text-gray-600 hover:text-[#00cba9] transition-colors"
               >
                 Conditions d&apos;utilisation
