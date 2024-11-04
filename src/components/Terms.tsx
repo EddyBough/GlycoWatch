@@ -42,7 +42,7 @@ export function Terms() {
           </h3>
           <p className="text-lg text-gray-700 mb-6 leading-relaxed">
             Tous les contenus, graphiques et éléments visuels de
-            l&apos;application sont protégés par des droits d'auteur et ne
+            l&apos;application sont protégés par des droits d&apos;auteur et ne
             peuvent être utilisés sans autorisation préalable.
           </p>
 
