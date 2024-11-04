@@ -15,7 +15,7 @@ export function Footer() {
             <h3 className="text-lg font-semibold text-gray-900">Contact</h3>
             <div className="space-y-3">
               <a
-                href="mailto:contact@diabetica.com"
+                href="mailto:ebdeveloper@outlook.fr"
                 className="flex items-center text-gray-600 hover:text-[#00cba9] transition-colors"
               >
                 <Mail className="h-5 w-5 mr-2" />
