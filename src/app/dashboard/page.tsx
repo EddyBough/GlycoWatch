@@ -186,7 +186,7 @@ const Dashboard = () => {
                 >
                   <div>
                     <p className="text-lg font-medium">
-                      {measurement.insulinLevel} g/L
+                      {measurement.insulinLevel} mg/L
                     </p>
                     <p className="text-sm text-gray-500">
                       {format(new Date(measurement.date), "HH:mm", {
