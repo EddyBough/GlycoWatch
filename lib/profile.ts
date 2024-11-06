@@ -1,5 +1,6 @@
 "use server"; // Garantit que le code s'exécute côté serveur
 
+import Profile from "@/app/profile/page";
 import prisma from "./prisma"; // Ton client Prisma
 
 // Récupérer le profil de l'utilisateur via son ID
@@ -66,4 +67,23 @@ export async function updateProfile(userId: number, data: any) {
       birthdate: birthdateAsDate, // On s'assure que la date est dans un format valide
     },
   });
+}
+
+// Fonction pour supprimer le profil de l'utilisateur
+export async function deleteUser(userId: number) {
+  // Suppression de l'utilisateur
+  await prisma.user.delete({
+    where: { id: userId },
+  });
+
+  // Vérification si l'utilisateur existe encore
+  const userCheck = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (userCheck) {
+    throw new Error("La suppression de l'utilisateur a échoué.");
+  }
+
+  return { message: "Compte supprimé avec succès" };
 }

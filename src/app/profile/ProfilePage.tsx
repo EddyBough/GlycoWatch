@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
-import { updateProfile } from "../../../lib/profile";
+import { updateProfile, deleteUser } from "../../../lib/profile";
 import { BackgroundDashboard } from "@/components/BackgroundDashboard";
+import ConfirmationModal from "@/components/confirmationModal";
 
 interface UserProfile {
   id: number;
@@ -22,6 +23,7 @@ interface UserProfile {
 const ProfilePage = ({ profile }: { profile: UserProfile }) => {
   const { data: session } = useSession();
   const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     name: profile?.name || "",
     firstname: profile?.firstname || "",
@@ -63,6 +65,19 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
     setTimeout(() => {
       router.push("/dashboard");
     }, 2000);
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteUser(profile.userId); // Appel direct à la fonction côté serveur
+      await signOut(session?.user.id);
+      toast.success("Compte supprimé avec succès");
+      setTimeout(() => {
+        router.push("/home"); // Rediriger après suppression
+      }, 2000);
+    } catch (error) {
+      toast.error("Erreur lors de la suppression du compte");
+    }
   };
 
   return (
@@ -191,12 +206,31 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full bg-[#00cba9] hover:bg-[#00b598] text-white py-3 px-6 rounded-lg transition-colors duration-200 font-medium"
+                className="w-full mb-16 bg-[#00cba9] hover:bg-[#00b598] text-white py-3 px-6 rounded-lg transition-colors duration-200 font-medium"
               >
                 Mettre à jour le profil
               </button>
             </div>
           </form>
+
+          {/* Modal de confirmation */}
+          <button
+            onClick={() => setShowModal(true)}
+            className="w-full bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-lg transition-colors duration-200 font-medium"
+          >
+            Supprimer votre compte
+          </button>
+
+          <ConfirmationModal
+            isOpen={showModal}
+            title="Confirmation"
+            message="Êtes-vous sûr de vouloir supprimer votre compte ?"
+            onConfirm={() => {
+              setShowModal(false);
+              handleDeleteAccount();
+            }}
+            onCancel={() => setShowModal(false)}
+          />
         </div>
       </div>
     </div>
