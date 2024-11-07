@@ -9,6 +9,8 @@ import {
 } from "next-auth/react";
 import { BuiltInProviderType } from "next-auth/providers/index";
 import { WaveBackground } from "@/components/WaveBackground";
+import ErrorModal from "@/components/errorModal";
+import { ClipLoader } from "react-spinners";
 
 export default function SignIn() {
   const [providers, setProviders] = useState<Record<
@@ -17,6 +19,7 @@ export default function SignIn() {
   > | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
   useEffect(() => {
     const fetchProviders = async () => {
@@ -39,14 +42,14 @@ export default function SignIn() {
     if (result?.ok) {
       window.location.href = "/dashboard";
     } else {
-      alert("Échec de la connexion : " + result?.error);
+      setShowErrorModal(true);
     }
   };
 
   if (!providers) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="animate-pulse text-lg font-medium">Loading...</div>
+        <ClipLoader color="#00cba9" size={50} />
       </div>
     );
   }
@@ -54,7 +57,12 @@ export default function SignIn() {
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4 mt-[-60px] lg:mt-[-50px]">
       <WaveBackground />
-
+      <ErrorModal
+        isOpen={showErrorModal}
+        title="Erreur de connexion"
+        message="Les informations de connexion sont incorrectes. Réessayez avec vos identifiant et mot de passe"
+        onConfirm={() => setShowErrorModal(false)}
+      />
       <div className="w-full max-w-md bg-white/95 backdrop-blur-sm shadow-xl rounded-lg p-8">
         <div className="text-center mb-8">
           <h1 className="lg:text-xl md:text-xl text-s font-medium">
