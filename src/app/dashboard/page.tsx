@@ -16,6 +16,8 @@ import { fr } from "date-fns/locale";
 import { BackgroundDashboard } from "@/components/BackgroundDashboard";
 import GetMeasurementMonthly from "@/components/GetMeasurementMonthly";
 import MeasurementChart from "@/components/MeasurementChart";
+import ModificationModal from "@/components/ModificationModal";
+import ConfirmationModal from "@/components/confirmationModal";
 
 interface Measurement {
   id: number;
@@ -29,6 +31,13 @@ const Dashboard = () => {
   const [measurements, setMeasurements] = useState<Measurement[]>([]);
   const [insulinLevel, setInsulinLevel] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showModificationModal, setModificationModal] = useState(false);
+  const [selectedMeasurement, setSelectedMeasurement] =
+    useState<Measurement | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedMeasurementForDelete, setSelectedMeasurementForDelete] =
+    useState<Measurement | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -57,7 +66,7 @@ const Dashboard = () => {
     e.preventDefault();
 
     if (insulinLevel === "" || isNaN(parseFloat(insulinLevel))) {
-      alert("Veuillez entrer une valeur valide pour le taux d'insuline");
+      alert("Veuillez entrer une valeur valide pour le taux de glycémie");
       return;
     }
 
@@ -68,7 +77,7 @@ const Dashboard = () => {
       return;
     }
 
-    // Créer une nouvelle date en combinant la date sélectionnée et l'heure actuelle
+    // Create new date with date selected and current time
     const currentTime = new Date();
     const dateWithTime = new Date(
       selectedDate.setHours(currentTime.getHours(), currentTime.getMinutes())
@@ -101,6 +110,49 @@ const Dashboard = () => {
         format(new Date(measurement.date), "yyyy-MM-dd") ===
         format(selectedDate ?? new Date(), "yyyy-MM-dd")
     );
+  };
+
+  // Function for display the Modal on true and get the Measure selected
+  const handleEditClick = (measurement: Measurement) => {
+    setSelectedMeasurement(measurement);
+    setModificationModal(true);
+  };
+
+  // Function for validation and actualization of the Glycemy Level without refresh the page
+  const handleConfirmEdit = async (newValue: number) => {
+    if (selectedMeasurement) {
+      await editMeasurement(selectedMeasurement.id, newValue);
+      setMeasurements((prev) =>
+        prev.map((m) =>
+          m.id === selectedMeasurement.id ? { ...m, insulinLevel: newValue } : m
+        )
+      );
+      setModificationModal(false);
+      setSelectedMeasurement(null);
+    }
+  };
+
+  // Function for display the confirmationModal on true and get the Measure selected
+  const handleDeleteClick = (measurement: Measurement) => {
+    setSelectedMeasurementForDelete(measurement);
+    setShowDeleteModal(true);
+  };
+
+  // Function for validation of deletion and actualization of the Glycemy Level's array without refresh the page
+  const handleConfirmDeleteMeasurement = async () => {
+    if (selectedMeasurementForDelete) {
+      await deleteMeasurement(selectedMeasurementForDelete.id);
+      setMeasurements((prev) =>
+        prev.filter((m) => m.id !== selectedMeasurementForDelete.id)
+      );
+      setShowDeleteModal(false);
+      setSelectedMeasurementForDelete(null);
+    }
+  };
+
+  const handleCancelDeleteModal = () => {
+    setShowDeleteModal(false);
+    setSelectedMeasurementForDelete(null);
   };
 
   return (
@@ -194,77 +246,72 @@ const Dashboard = () => {
                       })}
                     </p>
                   </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={async () => {
-                        const newInsulinLevel = prompt(
-                          "Entrez la nouvelle valeur de l'insuline",
-                          measurement.insulinLevel.toString()
-                        );
-                        if (newInsulinLevel) {
-                          await editMeasurement(
-                            measurement.id,
-                            parseFloat(newInsulinLevel)
-                          );
-                          setMeasurements((prev) =>
-                            prev.map((m) =>
-                              m.id === measurement.id
-                                ? {
-                                    ...m,
-                                    insulinLevel: parseFloat(newInsulinLevel),
-                                  }
-                                : m
-                            )
-                          );
-                        }
-                      }}
-                      className="p-2 text-gray-600 hover:text-[#00cba9] transition-colors"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                  <div className="flex flex-row space-x-10">
+                    <div>
+                      <div>
+                        <button onClick={() => handleEditClick(measurement)}>
+                          <svg
+                            className=" mt-3"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                          </svg>
+                        </button>
+                      </div>
+
+                      {/* confirmation modal */}
+                      {showModificationModal && selectedMeasurement && (
+                        <ModificationModal
+                          isOpen={showModificationModal}
+                          title="Modifier la mesure"
+                          initialValue={selectedMeasurement.insulinLevel}
+                          onSubmit={handleConfirmEdit}
+                          onCancel={() => setModificationModal(false)}
+                        />
+                      )}
+                    </div>
+
+                    <div>
+                      <button
+                        onClick={() => handleDeleteClick(measurement)}
+                        className="p-2 text-gray-600 hover:text-red-500 transition-colors"
                       >
-                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                      </svg>
-                    </button>
-                    <button
-                      onClick={async () => {
-                        if (
-                          confirm(
-                            "Êtes-vous sûr de vouloir supprimer cette mesure ?"
-                          )
-                        ) {
-                          await deleteMeasurement(measurement.id);
-                          setMeasurements((prev) =>
-                            prev.filter((m) => m.id !== measurement.id)
-                          );
-                        }
-                      }}
-                      className="p-2 text-gray-600 hover:text-red-500 transition-colors"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M3 6h18" />
-                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                      </svg>
-                    </button>
+                        <svg
+                          className="mt-1"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M3 6h18" />
+                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                        </svg>
+                      </button>
+
+                      {showDeleteModal && selectedMeasurementForDelete && (
+                        <ConfirmationModal
+                          isOpen={showDeleteModal}
+                          title="Confirmation de suppression"
+                          message="Êtes-vous sûr de vouloir supprimer cette mesure ?"
+                          onConfirm={handleConfirmDeleteMeasurement}
+                          onCancel={handleCancelDeleteModal}
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}

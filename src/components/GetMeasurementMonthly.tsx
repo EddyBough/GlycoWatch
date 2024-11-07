@@ -35,7 +35,7 @@ export default function GetMeasurementMonthly({ userId }: { userId: number }) {
       body: monthlyMeasurements.map((measure) => [
         new Date(measure.date).toLocaleDateString(),
         new Date(measure.date).toLocaleTimeString(),
-        `${measure.insulinLevel} g/L`,
+        `${measure.insulinLevel} mg/L`,
       ]),
     });
     doc.save(`mesures_mensuelles_${month + 1}_${year}.pdf`);
