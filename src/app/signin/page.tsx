@@ -122,6 +122,14 @@ export default function SignIn() {
               {Object.values(providers).map((provider) => {
                 if (provider.id === "credentials") return null;
 
+                // Définir l'image en fonction du fournisseur
+                let iconSrc;
+                if (provider.id === "google") {
+                  iconSrc = "/image/icon-google.svg";
+                } else if (provider.id === "github") {
+                  iconSrc = "/image/icon-github.svg"; // Assurez-vous que l'image existe dans votre dossier public
+                }
+
                 return (
                   <button
                     key={provider.name}
@@ -131,11 +139,13 @@ export default function SignIn() {
                     className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
                   >
                     {provider.name}
-                    <img
-                      src="/image/icon-google.svg"
-                      alt="Google Icon"
-                      className=" ml-2 w-5 h-5"
-                    />
+                    {iconSrc && (
+                      <img
+                        src={iconSrc}
+                        alt={`${provider.name} Icon`}
+                        className="ml-2 w-5 h-5"
+                      />
+                    )}
                   </button>
                 );
               })}
