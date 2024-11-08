@@ -44,7 +44,7 @@ export const Navbar = () => {
         <div className="-ml-6">
           <Link href="/">
             <img
-              src="/image/glycowatchLogo1.svg"
+              src="/image/glycoWatchLogo1.svg"
               alt="GlycoWatch Logo"
               width={150}
               height={32}
@@ -94,7 +94,7 @@ export const Navbar = () => {
             <div className="flex justify-between items-center backdrop-blur-md md:hidden">
               <Link href="/" onClick={handleLinkClick}>
                 <img
-                  src="/image/glycowatchLogo1.svg"
+                  src="/image/glycoWatchLogo1.svg"
                   alt="GlycoWatch Logo"
                   width={150}
                   height={32}
