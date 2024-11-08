@@ -7,7 +7,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-white/20 backdrop-blur-sm">
+    <footer className="w-full bg-white/20 backdrop-blur-sm text-center">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-12">
           {/* Contact Info */}
@@ -16,13 +16,13 @@ export function Footer() {
             <div className="space-y-3">
               <a
                 href="mailto:ebdeveloper@outlook.fr"
-                className="flex items-center text-gray-600 hover:text-[#00cba9] transition-colors"
+                className="flex items-center justify-center text-gray-600 hover:text-[#00cba9] transition-colors"
               >
                 <Mail className="h-5 w-5 mr-2" />
                 ebdeveloper@outlook.fr
               </a>
 
-              <div className="flex items-center text-gray-600">
+              <div className="flex items-center justify-center text-gray-600">
                 <MapPin className="h-5 w-5 mr-2" />
                 Marseille, France
               </div>
@@ -65,7 +65,7 @@ export function Footer() {
           {/* Social Links */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-900">Suivez-nous</h3>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 justify-center">
               <a
                 href="https://github.com/EddyBough"
                 target="_blank"
@@ -88,11 +88,11 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-100 py-6">
-          <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+          <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0">
             <div className="text-gray-600 text-sm">
-              © {currentYear} GlycoWatch. Tous droits réservés.
+              © {currentYear} GlycoWatch®. Tous droits réservés.
             </div>
-            <div className="flex items-center text-gray-600 text-sm">
+            <div className="flex justify-center text-gray-600 text-sm">
               Fait avec <Heart className="h-4 w-4 mx-1 text-purple-600" /> à
               Marseille
             </div>
