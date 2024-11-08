@@ -44,7 +44,7 @@ export const Navbar = () => {
         <div className="-ml-6">
           <Link href="/">
             <img
-              src="/image/glycowatchLogo.svg"
+              src="/image/glycowatchLogo1.svg"
               alt="GlycoWatch Logo"
               width={150}
               height={32}
@@ -94,7 +94,7 @@ export const Navbar = () => {
             <div className="flex justify-between items-center backdrop-blur-md md:hidden">
               <Link href="/" onClick={handleLinkClick}>
                 <img
-                  src="/image/glycowatchLogo.svg"
+                  src="/image/glycowatchLogo1.svg"
                   alt="GlycoWatch Logo"
                   width={150}
                   height={32}
@@ -114,7 +114,7 @@ export const Navbar = () => {
             <ul className="flex flex-col text-center lg:space-x-6 gap-4 p-4 md:flex-row md:p-0">
               <li>
                 <Link
-                  className="block py-2 text-purple-600 hover:text-purple-600"
+                  className="block py-2 text-purple-800 hover:text-purple-600"
                   href="/privacy"
                   onClick={handleLinkClick}
                 >
@@ -123,7 +123,7 @@ export const Navbar = () => {
               </li>
               <li>
                 <Link
-                  className="block py-2 text-purple-600 hover:text-purple-600"
+                  className="block py-2 text-purple-800 hover:text-purple-600"
                   href="/terms"
                   onClick={handleLinkClick}
                 >
@@ -133,7 +133,7 @@ export const Navbar = () => {
               {session && (
                 <li>
                   <Link
-                    className="block py-2 text-purple-600 hover:text-purple-600"
+                    className="block py-2 text-purple-800 hover:text-purple-600"
                     href="/dashboard"
                     onClick={handleLinkClick}
                   >
@@ -144,7 +144,7 @@ export const Navbar = () => {
               {!session && (
                 <li>
                   <Link
-                    className="block py-2 text-purple-600 hover:text-purple-400"
+                    className="block py-2 text-purple-800 hover:text-purple-400"
                     href="/signin"
                     onClick={handleLinkClick}
                   >
@@ -155,7 +155,7 @@ export const Navbar = () => {
               {!session && (
                 <li>
                   <Link
-                    className="block py-2 text-purple-600 hover:text-purple-400"
+                    className="block py-2 text-purple-800 hover:text-purple-400"
                     href="/signup"
                     onClick={handleLinkClick}
                   >
@@ -166,7 +166,7 @@ export const Navbar = () => {
               {session && (
                 <li>
                   <Link
-                    className="block py-2 text-purple-600 hover:text-purple-600"
+                    className="block py-2 text-purple-800 hover:text-purple-600"
                     href="/profile"
                     onClick={handleLinkClick}
                   >
@@ -177,7 +177,7 @@ export const Navbar = () => {
               {session && (
                 <li>
                   <button
-                    className="block w-full py-2 text-purple-600 text-center hover:text-purple-400"
+                    className="block w-full py-2 text-purple-800 text-center hover:text-purple-400"
                     onClick={handleSignOut}
                   >
                     Se déconnecter
