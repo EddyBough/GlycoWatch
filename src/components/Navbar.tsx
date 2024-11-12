@@ -40,7 +40,7 @@ export const Navbar = () => {
   return (
     <header className="relative z-50">
       <ToastContainer />
-      <nav className="flex items-center justify-between w-full py-4 px-4 text-lg text-gray-700 border border-gray-200/30 shadow-lg">
+      <nav className="flex items-center justify-between w-full py-4 px-4 text-lg">
         <div className="-ml-6">
           <Link href="/">
             <img
