@@ -2,7 +2,10 @@ import React from "react";
 
 export function WaveBackground() {
   return (
-    <div className="fixed inset-0 w-full h-full pointer-events-none z-0">
+    <div
+      className="fixed inset-0 w-full h-full pointer-events-none"
+      style={{ zIndex: -1 }}
+    >
       <div className="absolute inset-0 w-full h-full transform -skew-y-6 translate-y-1/4">
         <svg
           className="absolute w-[200%] h-full opacity-80"
