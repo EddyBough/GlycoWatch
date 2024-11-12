@@ -24,7 +24,6 @@ export default function SignIn() {
   useEffect(() => {
     const fetchProviders = async () => {
       const providers = await getProviders();
-      console.log("Fetched providers:", providers);
       setProviders(providers);
     };
 
@@ -55,103 +54,102 @@ export default function SignIn() {
   }
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-4 mt-[-60px] lg:mt-[-50px] z-10">
+    <div className="relative min-h-screen isolate">
       <WaveBackground />
-      <ErrorModal
-        isOpen={showErrorModal}
-        title="Erreur de connexion"
-        message="Les informations de connexion sont incorrectes. Réessayez avec vos identifiant et mot de passe"
-        onConfirm={() => setShowErrorModal(false)}
-      />
-      <div className="w-full max-w-md bg-white/95 backdrop-blur-sm shadow-xl rounded-lg p-8">
-        <div className="text-center mb-8">
-          <h1 className="lg:text-xl md:text-xl text-s font-medium">
-            Bienvenue
-          </h1>
+      <div className="relative flex min-h-screen items-center justify-center p-4 -mt-[60px] lg:-mt-[50px]">
+        <ErrorModal
+          isOpen={showErrorModal}
+          title="Erreur de connexion"
+          message="Les informations de connexion sont incorrectes. Réessayez avec vos identifiant et mot de passe"
+          onConfirm={() => setShowErrorModal(false)}
+        />
+        <div className="w-full max-w-md bg-white/95 backdrop-blur-sm shadow-xl rounded-lg p-8">
+          <div className="text-center mb-8">
+            <h1 className="text-xl font-medium">Bienvenue</h1>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <div className="relative">
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="relative">
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  required
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-[#00cba9] text-white py-3 px-4 rounded-lg hover:bg-[#9333EA] transition-colors duration-200 font-medium"
+            >
+              Se connecter
+            </button>
+          </form>
+
+          {Object.values(providers).some((p) => p.id !== "credentials") && (
+            <>
+              <div className="relative my-8">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">
+                    Se connecter avec
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                {Object.values(providers).map((provider) => {
+                  if (provider.id === "credentials") return null;
+
+                  const iconSrc =
+                    provider.id === "google"
+                      ? "/image/icon-google.svg"
+                      : provider.id === "github"
+                      ? "/image/icon-github.svg"
+                      : null;
+
+                  return (
+                    <button
+                      key={provider.name}
+                      onClick={() =>
+                        signIn(provider.id, { callbackUrl: "/dashboard" })
+                      }
+                      className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+                    >
+                      {provider.name}
+                      {iconSrc && (
+                        <img
+                          src={iconSrc}
+                          alt={`${provider.name} Icon`}
+                          className="ml-2 w-5 h-5"
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <div className="relative">
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
-                required
-              />
-            </div>
-          </div>
-
-          <div>
-            <div className="relative">
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
-                required
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-[#00cba9] text-white py-3 px-4 rounded-lg hover:bg-[#9333EA] transition-colors duration-200 font-medium"
-          >
-            Se connecter
-          </button>
-        </form>
-
-        {Object.values(providers).some((p) => p.id !== "credentials") && (
-          <>
-            <div className="relative my-8">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  Se connecter avec
-                </span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              {Object.values(providers).map((provider) => {
-                if (provider.id === "credentials") return null;
-
-                // Définir l'image en fonction du fournisseur
-                let iconSrc;
-                if (provider.id === "google") {
-                  iconSrc = "/image/icon-google.svg";
-                } else if (provider.id === "github") {
-                  iconSrc = "/image/icon-github.svg"; // Assurez-vous que l'image existe dans votre dossier public
-                }
-
-                return (
-                  <button
-                    key={provider.name}
-                    onClick={() =>
-                      signIn(provider.id, { callbackUrl: "/dashboard" })
-                    }
-                    className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
-                  >
-                    {provider.name}
-                    {iconSrc && (
-                      <img
-                        src={iconSrc}
-                        alt={`${provider.name} Icon`}
-                        className="ml-2 w-5 h-5"
-                      />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </>
-        )}
       </div>
     </div>
   );
