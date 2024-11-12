@@ -55,7 +55,7 @@ export default function SignIn() {
   }
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-4 mt-[-60px] lg:mt-[-50px]">
+    <div className="relative min-h-screen flex items-center justify-center p-4 mt-[-60px] lg:mt-[-50px] z-10">
       <WaveBackground />
       <ErrorModal
         isOpen={showErrorModal}
