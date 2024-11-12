@@ -11,17 +11,39 @@ export async function POST(req: NextRequest) {
     const { email, password, name, firstname, birthdate, address, phone } =
       body;
 
-    if (!email || !password || !name || !firstname || !birthdate) {
-      return NextResponse.json(
-        {
-          message:
-            "Email, mot de passe, nom, prénom et date de naissance sont requis",
-        },
-        { status: 400 }
-      );
+    const errors: { [key: string]: string } = {};
+
+    // Errors verifications fields
+    if (!email) errors.email = "L'email est requis";
+    if (!password) errors.password = "Le mot de passe est requis";
+    if (!name) errors.name = "Le nom est requis";
+    if (!firstname) errors.firstname = "Le prénom est requis";
+    if (!birthdate) errors.birthdate = "La date de naissance est requise";
+
+    if (Object.keys(errors).length > 0) {
+      return NextResponse.json({ errors }, { status: 400 });
     }
 
-    // Vérification si l'email existe déjà
+    // Regex for password
+    if (password.length < 6) {
+      errors.passwordLength =
+        "Le mot de passe doit contenir au moins 6 caractères";
+    }
+    if (!/[A-Z]/.test(password)) {
+      errors.passwordUppercase =
+        "Le mot de passe doit contenir au moins une majuscule";
+    }
+    if (!/[!@#$%^&*]/.test(password)) {
+      errors.passwordSpecial =
+        "Le mot de passe doit contenir au moins un caractère spécial";
+    }
+
+    // If validations errors => return errors
+    if (Object.keys(errors).length > 0) {
+      return NextResponse.json({ errors }, { status: 400 });
+    }
+
+    // Verification in db if user email already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
@@ -51,7 +73,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    await sendEmail(user.email, user.firstname || "Cher utilisateur"); //une fois créé on envoi un email de bienvenue
+    await sendEmail(user.email, user.firstname || "Cher utilisateur"); // send welcome email
 
     return NextResponse.json(
       { message: "Utilisateur créé avec succès" },

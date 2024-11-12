@@ -19,16 +19,6 @@ export default function SignUp() {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log("Données envoyées : ", {
-      email,
-      password,
-      name,
-      firstname,
-      birthdate,
-      address,
-      phone,
-    });
-
     try {
       const res = await fetch("/api/signup", {
         method: "POST",
@@ -46,18 +36,20 @@ export default function SignUp() {
         },
       });
 
-      console.log("Réponse de l'API : ", res);
+      const data = await res.json();
 
       if (res.ok) {
         toast.success("Inscription réussie ! Redirection...");
         setTimeout(() => router.push("/dashboard"), 3000);
       } else {
-        const data = await res.json();
-        if (res.status === 409) {
-          // cas où le compte existe deja
-          toast.error("Un compte existe déjà avec cet email !");
+        // Affichage des erreurs spécifiques en utilisant des toasts
+        if (data.errors) {
+          Object.keys(data.errors).forEach((key) => {
+            toast.error(data.errors[key]);
+          });
+        } else {
+          toast.error(data.message || "Échec de l'inscription");
         }
-        toast.error(data.message || "Échec de l'inscription");
       }
     } catch (error) {
       console.error("Erreur lors de la requête : ", error);
