@@ -64,7 +64,7 @@ export const Navbar = () => {
         <div
           className={`${
             isOpen ? "flex" : "hidden"
-          } fixed inset-0 md:relative md:flex md:items-center md:w-auto md:bg-transparent bg-white flex-col items-center justify-center`}
+          } fixed inset-0 md:relative md:flex md:items-center md:w-auto md:bg-transparent flex-col items-center justify-center mt-8`}
         >
           {/* Overlay sombre avec flou */}
           <div
