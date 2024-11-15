@@ -137,7 +137,7 @@ export const Navbar = () => {
                     href="/signup"
                     onClick={handleLinkClick}
                   >
-                    <User className="mr-2 w-5 h-5" /> S'inscrire
+                    <User className="mr-2 w-5 h-5" /> S&apos;inscrire
                   </Link>
                 </li>
               )}
