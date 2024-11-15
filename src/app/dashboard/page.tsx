@@ -331,7 +331,9 @@ const Dashboard = () => {
             )}
           </div>
           {session?.user?.id && (
-            <GetMeasurementMonthly userId={session.user.id} />
+            <div>
+              <GetMeasurementMonthly userId={session.user.id} />
+            </div>
           )}
         </div>
       </div>

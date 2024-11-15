@@ -1,11 +1,10 @@
-"use client";
-
 import React, { useState } from "react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Lock, FileText, LayoutDashboard, User, LogOut } from "lucide-react";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,12 +13,7 @@ export const Navbar = () => {
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
-    // Empêcher le défilement du body quand le menu est ouvert
-    if (!isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    document.body.style.overflow = isOpen ? "unset" : "hidden";
   };
 
   const handleLinkClick = () => {
@@ -41,6 +35,7 @@ export const Navbar = () => {
     <header className="relative z-50">
       <ToastContainer />
       <nav className="flex items-center justify-between w-full py-4 px-4 text-lg">
+        {/* Logo */}
         <div className="-ml-6">
           <Link href="/">
             <img
@@ -51,6 +46,8 @@ export const Navbar = () => {
             />
           </Link>
         </div>
+
+        {/* Bouton menu mobile */}
         <div className="mr-5">
           <button
             className="h-6 w-6 cursor-pointer md:hidden block"
@@ -60,7 +57,7 @@ export const Navbar = () => {
           </button>
         </div>
 
-        {/* Menu mobile et desktop */}
+        {/* Menu */}
         <div
           className={`
             ${isOpen ? "flex" : "hidden"}
@@ -69,7 +66,7 @@ export const Navbar = () => {
             md:bg-transparent bg-transparent
           `}
         >
-          {/* Overlay sombre avec flou */}
+          {/* Overlay sombre */}
           <div
             className={`
               fixed inset-0 
@@ -80,7 +77,7 @@ export const Navbar = () => {
             onClick={toggleMenu}
           />
 
-          {/* Container du menu mobile */}
+          {/* Container du menu */}
           <div
             className="
             min-h-screen w-[100%] ml-auto
@@ -90,97 +87,78 @@ export const Navbar = () => {
             md:flex-row md:items-center
           "
           >
-            {/* Header du menu mobile */}
-            <div className="flex justify-between items-center backdrop-blur-md md:hidden">
-              <Link href="/" onClick={handleLinkClick}>
-                <img
-                  src="/image/glycoWatchLogo1.svg"
-                  alt="GlycoWatch Logo"
-                  width={150}
-                  height={32}
-                />
-              </Link>
-              <button onClick={toggleMenu} className="h-6 w-6 mr-7">
-                <img
-                  src="/image/icon-close.png"
-                  alt="Close"
-                  width={24}
-                  height={24}
-                />
-              </button>
-            </div>
-
             {/* Liste des liens */}
             <ul className="flex flex-col text-center lg:space-x-6 gap-4 p-4 md:flex-row md:p-0">
+              {/* Liens avec icônes */}
               <li>
                 <Link
-                  className="block py-2 text-purple-800 hover:text-purple-600"
+                  className="flex items-center py-2 text-purple-800 hover:text-purple-600"
                   href="/privacy"
                   onClick={handleLinkClick}
                 >
-                  Vie privée
+                  <Lock className="mr-2 w-5 h-5" /> Vie privée
                 </Link>
               </li>
               <li>
                 <Link
-                  className="block py-2 text-purple-800 hover:text-purple-600"
+                  className="flex items-center py-2 text-purple-800 hover:text-purple-600"
                   href="/terms"
                   onClick={handleLinkClick}
                 >
-                  Condition d&apos;utilisation
+                  <FileText className="mr-2 w-5 h-5" /> Conditions d'utilisation
                 </Link>
               </li>
               {session && (
                 <li>
                   <Link
-                    className="block py-2 text-purple-800 hover:text-purple-600"
+                    className="flex items-center py-2 text-purple-800 hover:text-purple-600"
                     href="/dashboard"
                     onClick={handleLinkClick}
                   >
-                    Dashboard
+                    <LayoutDashboard className="mr-2 w-5 h-5" /> Dashboard
                   </Link>
                 </li>
               )}
               {!session && (
                 <li>
                   <Link
-                    className="block py-2 text-purple-800 hover:text-purple-400"
+                    className="flex items-center py-2 text-purple-800 hover:text-purple-400"
                     href="/signin"
                     onClick={handleLinkClick}
                   >
-                    Se connecter
+                    <LogOut className="mr-2 w-5 h-5" /> Se connecter
                   </Link>
                 </li>
               )}
               {!session && (
                 <li>
                   <Link
-                    className="block py-2 text-purple-800 hover:text-purple-400"
+                    className="flex items-center py-2 text-purple-800 hover:text-purple-400"
                     href="/signup"
                     onClick={handleLinkClick}
                   >
-                    S&apos;inscrire
+                    <User className="mr-2 w-5 h-5" /> S'inscrire
                   </Link>
                 </li>
               )}
               {session && (
                 <li>
                   <Link
-                    className="block py-2 text-purple-800 hover:text-purple-600"
+                    className="flex items-center py-2 text-purple-800 hover:text-purple-600"
                     href="/profile"
                     onClick={handleLinkClick}
                   >
-                    Profil
+                    <User className="mr-2 w-5 h-5" /> Profil
                   </Link>
                 </li>
               )}
               {session && (
                 <li>
                   <button
-                    className="block w-full py-2 text-purple-800 text-center hover:text-purple-400"
+                    className="flex items-center w-full py-2 text-purple-800 text-center hover:text-purple-400"
                     onClick={handleSignOut}
                   >
-                    Se déconnecter
+                    <LogOut className="mr-2 w-5 h-5" /> Se déconnecter
                   </button>
                 </li>
               )}
