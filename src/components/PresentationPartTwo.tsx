@@ -29,7 +29,7 @@ export function PresentationPartTwo() {
           <img
             src="/image/freedom-image.jpg"
             alt="Glucose Chart"
-            className="rounded-2xl shadow-2xl w-full max-w-md mx-auto transform hover:scale-105 transition-transform duration-300"
+            className="rounded-2xl shadow-2xl w-full max-w-md mx-auto transform hover:scale-105 transition-transform duration-300 lg:-mt-6"
           />
         </div>
       </div>
