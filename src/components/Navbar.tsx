@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
@@ -13,7 +15,11 @@ export const Navbar = () => {
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
-    document.body.style.overflow = isOpen ? "unset" : "hidden";
+    if (!isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
   };
 
   const handleLinkClick = () => {
@@ -35,7 +41,6 @@ export const Navbar = () => {
     <header className="relative z-50">
       <ToastContainer />
       <nav className="flex items-center justify-between w-full py-4 px-4 text-lg">
-        {/* Logo */}
         <div className="-ml-6">
           <Link href="/">
             <img
@@ -46,8 +51,6 @@ export const Navbar = () => {
             />
           </Link>
         </div>
-
-        {/* Bouton menu mobile */}
         <div className="mr-5">
           <button
             className="h-6 w-6 cursor-pointer md:hidden block"
@@ -57,109 +60,123 @@ export const Navbar = () => {
           </button>
         </div>
 
-        {/* Menu */}
+        {/* Menu mobile et desktop */}
         <div
-          className={`
-            ${isOpen ? "flex" : "hidden"}
-            fixed inset-0 md:relative
-            md:flex md:items-center md:w-auto
-            md:bg-transparent bg-transparent
-          `}
+          className={`${
+            isOpen ? "flex" : "hidden"
+          } fixed inset-0 md:relative md:flex md:items-center md:w-auto md:bg-transparent bg-white flex-col items-center justify-center`}
         >
-          {/* Overlay sombre */}
+          {/* Overlay sombre avec flou */}
           <div
-            className={`
-              fixed inset-0 
-              bg-white/90 backdrop-blur-sm
-              -z-10 
-              md:hidden
-            `}
+            className="fixed inset-0 bg-white/90 backdrop-blur-sm -z-10 md:hidden"
             onClick={toggleMenu}
           />
 
-          {/* Container du menu */}
           <div
             className="
-            min-h-screen w-[100%] ml-auto
-            bg-transparent shadow-lg
-            flex flex-col
-            md:min-h-0 md:w-auto md:shadow-none md:bg-transparent
-            md:flex-row md:items-center
-          "
+              min-h-screen w-[100%] ml-auto
+              bg-transparent shadow-lg
+              flex flex-col
+              md:min-h-0 md:w-auto md:shadow-none md:bg-transparent
+              md:flex-row md:items-center
+            "
           >
-            {/* Liste des liens */}
-            <ul className="flex flex-col text-center lg:space-x-6 gap-4 p-4 md:flex-row md:p-0">
-              {/* Liens avec icônes */}
+            <div className="flex justify-between items-center backdrop-blur-md md:hidden">
+              <Link href="/" onClick={handleLinkClick}>
+                <img
+                  src="/image/glycoWatchLogo1.svg"
+                  alt="GlycoWatch Logo"
+                  width={150}
+                  height={32}
+                />
+              </Link>
+              <button onClick={toggleMenu} className="h-6 w-6 mr-8">
+                <img
+                  src="/image/icon-close.png"
+                  alt="Close"
+                  width={24}
+                  height={24}
+                />
+              </button>
+            </div>
+
+            <ul className="flex flex-col items-center gap-6 p-4 md:flex-row md:p-0">
               <li>
                 <Link
-                  className="flex items-center py-2 text-purple-800 hover:text-purple-600"
+                  className=" py-2 text-purple-800 hover:text-purple-600 flex items-center"
                   href="/privacy"
                   onClick={handleLinkClick}
                 >
-                  <Lock className="mr-2 w-5 h-5" /> Vie privée
+                  <Lock className="mr-2 w-5 h-5" />
+                  Vie privée
                 </Link>
               </li>
               <li>
                 <Link
-                  className="flex items-center py-2 text-purple-800 hover:text-purple-600"
+                  className=" py-2 text-purple-800 hover:text-purple-600 flex items-center"
                   href="/terms"
                   onClick={handleLinkClick}
                 >
-                  <FileText className="mr-2 w-5 h-5" /> Conditions
-                  d&apos;utilisation
+                  <FileText className="mr-2 w-5 h-5" />
+                  Conditions d&apos;utilisation
                 </Link>
               </li>
               {session && (
                 <li>
                   <Link
-                    className="flex items-center py-2 text-purple-800 hover:text-purple-600"
+                    className=" py-2 text-purple-800 hover:text-purple-600 flex items-center"
                     href="/dashboard"
                     onClick={handleLinkClick}
                   >
-                    <LayoutDashboard className="mr-2 w-5 h-5" /> Dashboard
+                    <LayoutDashboard className="mr-2 w-5 h-5" />
+                    Dashboard
                   </Link>
                 </li>
               )}
               {!session && (
                 <li>
                   <Link
-                    className="flex items-center py-2 text-purple-800 hover:text-purple-400"
+                    className=" py-2 text-purple-800 hover:text-purple-400 flex items-center"
                     href="/signin"
                     onClick={handleLinkClick}
                   >
-                    <LogOut className="mr-2 w-5 h-5" /> Se connecter
+                    <LogOut className="mr-2 w-5 h-5" />
+                    Se connecter
                   </Link>
                 </li>
               )}
               {!session && (
                 <li>
                   <Link
-                    className="flex items-center py-2 text-purple-800 hover:text-purple-400"
+                    className=" py-2 text-purple-800 hover:text-purple-400 flex items-center"
                     href="/signup"
                     onClick={handleLinkClick}
                   >
-                    <User className="mr-2 w-5 h-5" /> S&apos;inscrire
+                    <User className="mr-2 w-5 h-5" />
+                    S&apos;inscrire
                   </Link>
                 </li>
               )}
               {session && (
                 <li>
                   <Link
-                    className="flex items-center py-2 text-purple-800 hover:text-purple-600"
+                    className=" py-2 text-purple-800 hover:text-purple-600 flex items-center"
                     href="/profile"
                     onClick={handleLinkClick}
                   >
-                    <User className="mr-2 w-5 h-5" /> Profil
+                    <User className="mr-2 w-5 h-5" />
+                    Profil
                   </Link>
                 </li>
               )}
               {session && (
                 <li>
                   <button
-                    className="flex items-center w-full py-2 text-purple-800 text-center hover:text-purple-400"
+                    className=" w-full py-2 text-purple-800 text-center hover:text-purple-400 flex items-center"
                     onClick={handleSignOut}
                   >
-                    <LogOut className="mr-2 w-5 h-5" /> Se déconnecter
+                    <LogOut className="mr-2 w-5 h-5" />
+                    Se déconnecter
                   </button>
                 </li>
               )}
