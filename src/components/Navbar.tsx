@@ -105,7 +105,8 @@ export const Navbar = () => {
                   href="/terms"
                   onClick={handleLinkClick}
                 >
-                  <FileText className="mr-2 w-5 h-5" /> Conditions d'utilisation
+                  <FileText className="mr-2 w-5 h-5" /> Conditions
+                  d&apos;utilisation
                 </Link>
               </li>
               {session && (
