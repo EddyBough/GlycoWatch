@@ -22,14 +22,15 @@ import ConfirmationModal from "@/components/confirmationModal";
 interface Measurement {
   id: number;
   date: Date;
-  insulinLevel: number;
+  glycemyLevel: number;
+  insulinDose?: number | null;
 }
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [measurements, setMeasurements] = useState<Measurement[]>([]);
-  const [insulinLevel, setInsulinLevel] = useState<string>("");
+  const [glycemyLevel, setGlycemyLevel] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showModificationModal, setModificationModal] = useState(false);
@@ -65,12 +66,12 @@ const Dashboard = () => {
   const handleAddMeasurement = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (insulinLevel === "" || isNaN(parseFloat(insulinLevel))) {
+    if (glycemyLevel === "" || isNaN(parseFloat(glycemyLevel))) {
       alert("Veuillez entrer une valeur valide pour le taux de glycémie");
       return;
     }
 
-    const insulinLevelFloat = parseFloat(insulinLevel);
+    const glycemyLevelFloat = parseFloat(glycemyLevel);
 
     if (!selectedDate) {
       alert("Veuillez sélectionner une date");
@@ -85,12 +86,12 @@ const Dashboard = () => {
 
     const newMeasurement = await addMeasurement(
       session?.user?.id,
-      insulinLevelFloat,
+      glycemyLevelFloat,
       dateWithTime
     );
     if (newMeasurement) {
       setMeasurements((prev) => [...prev, newMeasurement]);
-      setInsulinLevel("");
+      setGlycemyLevel("");
     }
   };
 
@@ -124,7 +125,7 @@ const Dashboard = () => {
       await editMeasurement(selectedMeasurement.id, newValue);
       setMeasurements((prev) =>
         prev.map((m) =>
-          m.id === selectedMeasurement.id ? { ...m, insulinLevel: newValue } : m
+          m.id === selectedMeasurement.id ? { ...m, glycemyLevel: newValue } : m
         )
       );
       setModificationModal(false);
@@ -207,8 +208,8 @@ const Dashboard = () => {
               <div>
                 <input
                   type="number"
-                  value={insulinLevel}
-                  onChange={(e) => setInsulinLevel(e.target.value)}
+                  value={glycemyLevel}
+                  onChange={(e) => setGlycemyLevel(e.target.value)}
                   placeholder="Taux de glycémie"
                   step="0.1"
                   className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
@@ -238,7 +239,7 @@ const Dashboard = () => {
                 >
                   <div>
                     <p className="text-lg font-medium">
-                      {measurement.insulinLevel} mg/L
+                      {measurement.glycemyLevel} mg/L
                     </p>
                     <p className="text-sm text-gray-500">
                       {format(new Date(measurement.date), "HH:mm", {
@@ -272,7 +273,7 @@ const Dashboard = () => {
                         <ModificationModal
                           isOpen={showModificationModal}
                           title="Modifier la mesure"
-                          initialValue={selectedMeasurement.insulinLevel}
+                          initialValue={selectedMeasurement.glycemyLevel}
                           onSubmit={handleConfirmEdit}
                           onCancel={() => setModificationModal(false)}
                         />

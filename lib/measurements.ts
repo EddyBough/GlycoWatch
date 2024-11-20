@@ -13,22 +13,22 @@ export async function getMeasurements(userId: number) {
 
 export async function addMeasurement(
   userId: number,
-  insulinLevel: number,
+  glycemyLevel: number,
   date: Date
 ) {
   return await prisma.measurement.create({
     data: {
       userId,
-      insulinLevel,
+      glycemyLevel,
       date: new Date(date),
     },
   });
 }
 
-export async function editMeasurement(id: number, insulinLevel: number) {
+export async function editMeasurement(id: number, glycemyLevel: number) {
   return await prisma.measurement.update({
     where: { id },
-    data: { insulinLevel },
+    data: { glycemyLevel },
   });
 }
 
