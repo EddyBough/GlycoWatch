@@ -9,9 +9,10 @@ export function PresentationPartOne() {
       <div className="flex flex-col md:flex-row items-start justify-between gap-12">
         <div className="w-full md:w-1/2 flex flex-col bg-white/20 backdrop-blur-sm rounded-2xl shadow-xl p-6 mb-8">
           <p className="text-lg text-gray-700 mb-6">
-            Bienvenue sur notre toute nouvelle application, celle ci évoluera au
-            fil du temps pour proposer toujours plus de fonctionnalités
-            intéressante afin de devenir votre allié au quotidien !
+            Bienvenue sur notre toute nouvelle application GlycoWatch®, celle ci
+            évoluera au fil du temps pour proposer toujours plus de
+            fonctionnalités intéressante afin de devenir votre allié au
+            quotidien !
           </p>
           <p className="text-lg text-gray-700 mb-6">
             Inscrivez vous afin de pouvoir utiliser toute nos fonctionnalités.
