@@ -26,7 +26,7 @@ ChartJS.register(
 
 interface Measurement {
   date: Date;
-  insulinLevel: number;
+  glycemyLevel: number;
 }
 
 export default function MeasurementChart({
@@ -62,7 +62,7 @@ export default function MeasurementChart({
     const labels = filteredMeasurements.map((m) =>
       new Date(m.date).toLocaleTimeString()
     );
-    const data = filteredMeasurements.map((m) => m.insulinLevel);
+    const data = filteredMeasurements.map((m) => m.glycemyLevel);
 
     setChartData({
       labels: labels,

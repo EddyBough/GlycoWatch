@@ -8,7 +8,7 @@ import { getMonthlyMeasurements } from "../../lib/getMonthlyMeasurements";
 interface Measurement {
   userId: number;
   id: number;
-  insulinLevel: number;
+  glycemyLevel: number;
   date: Date;
 }
 
@@ -51,7 +51,7 @@ export default function GetMeasurementMonthly({ userId }: { userId: number }) {
           hour: "2-digit",
           minute: "2-digit",
         }),
-        `${measure.insulinLevel} mg/L`,
+        `${measure.glycemyLevel} mg/L`,
       ]),
       startY: 40,
       styles: {
