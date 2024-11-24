@@ -18,6 +18,7 @@ import GetMeasurementMonthly from "@/components/GetMeasurementMonthly";
 import MeasurementChart from "@/components/MeasurementChart";
 import ModificationModal from "@/components/ModificationModal";
 import ConfirmationModal from "@/components/confirmationModal";
+import ChatbotComponent from "@/components/Chatbot/ChatbotComponent";
 
 interface Measurement {
   id: number;
@@ -336,6 +337,9 @@ const Dashboard = () => {
               <GetMeasurementMonthly userId={session.user.id} />
             </div>
           )}
+          <div className="fixed bottom-4 right-4 w-96 shadow-lg">
+            <ChatbotComponent />
+          </div>
         </div>
       </div>
     </div>
