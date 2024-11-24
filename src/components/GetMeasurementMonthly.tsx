@@ -57,7 +57,7 @@ export default function GetMeasurementMonthly({ userId }: { userId: number }) {
       styles: {
         font: "helvetica", // font family table
         fontSize: 10,
-        cellPadding: 8,
+        cellPadding: 1,
         halign: "center",
       },
       headStyles: {
