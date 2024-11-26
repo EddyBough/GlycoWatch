@@ -101,6 +101,14 @@ export default function SignIn() {
             >
               Se connecter
             </button>
+            <span>
+              <a
+                href="/forgot-password"
+                className="text-sm text-[#00cba9] hover:underline"
+              >
+                Mot de passe oublié ?
+              </a>
+            </span>
           </form>
 
           {Object.values(providers).some((p) => p.id !== "credentials") && (
