@@ -58,12 +58,8 @@ export async function POST(req: NextRequest) {
 
     await sgMail.send(msg);
 
-    return NextResponse.redirect(
-      `${process.env.APP_URL}/email-sent-success?success=true`
-    );
+    return NextResponse.redirect(`${process.env.APP_URL}/email-sent-success`);
   } catch (error) {
-    return NextResponse.redirect(
-      `${process.env.APP_URL}/home?error=server_error`
-    );
+    return NextResponse.redirect(`${process.env.APP_URL}/home`);
   }
 }
