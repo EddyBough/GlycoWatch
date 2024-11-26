@@ -18,7 +18,7 @@ export default function PasswordUpdatedFailed() {
               {" "}
               <span className=" text-red-800">
                 La modification de votre mot de passe a échouée car le format
-                n'est pas supporté ou le lien de réinitialisation a expiré.
+                n&apos;est pas supporté ou le lien de réinitialisation a expiré.
               </span>
             </div>
           </div>
