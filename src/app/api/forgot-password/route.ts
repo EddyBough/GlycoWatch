@@ -6,6 +6,8 @@ import prisma from "../../../../lib/prisma";
 sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
 
 export async function POST(req: NextRequest) {
+  const appUrl = process.env.APP_URL || "http://localhost:3000";
+
   try {
     let email: string;
 
@@ -18,9 +20,7 @@ export async function POST(req: NextRequest) {
       const formData = await req.formData(); // if form-urlencoded, parse the data
       email = formData.get("email") as string;
     } else {
-      return NextResponse.redirect(
-        `${process.env.APP_URL}/error-unsupported-format`
-      );
+      return NextResponse.redirect(`${appUrl}/error-unsupported-format`, 303);
     }
 
     const user = await prisma.user.findUnique({
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!user) {
-      return NextResponse.redirect(`${process.env.APP_URL}/user-not-found`);
+      return NextResponse.redirect(`${appUrl}/user-not-found`, 303);
     }
 
     // generate token JWT for 1 hour
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       maxAge: 60 * 60,
     });
 
-    const resetLink = `${process.env.APP_URL}/reset-password?token=${resetToken}`;
+    const resetLink = `${appUrl}/reset-password?token=${resetToken}`;
 
     // send the e-mail
     const msg = {
@@ -58,8 +58,8 @@ export async function POST(req: NextRequest) {
 
     await sgMail.send(msg);
 
-    return NextResponse.redirect(`${process.env.APP_URL}/email-sent-success`);
+    return NextResponse.redirect(`${appUrl}/email-sent-success`, 303);
   } catch (error) {
-    return NextResponse.redirect(`${process.env.APP_URL}/home`);
+    return NextResponse.redirect(`${appUrl}/home`, 303);
   }
 }

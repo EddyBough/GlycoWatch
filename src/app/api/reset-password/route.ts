@@ -5,6 +5,8 @@ import prisma from "../../../../lib/prisma";
 import { parse } from "querystring";
 
 export async function POST(req: NextRequest) {
+  const appUrl = process.env.APP_URL || "http://localhost:3000";
+
   try {
     const contentType = req.headers.get("content-type") || "";
 
@@ -16,9 +18,7 @@ export async function POST(req: NextRequest) {
       const text = await req.text();
       body = parse(text);
     } else {
-      return NextResponse.redirect(
-        `${process.env.APP_URL}/password-update-failed`
-      );
+      return NextResponse.redirect(`${appUrl}/password-update-failed`, 303);
     }
 
     const { token, password } = body;
@@ -29,9 +29,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!decoded?.email) {
-      return NextResponse.redirect(
-        `${process.env.APP_URL}/password-update-failed`
-      );
+      return NextResponse.redirect(`${appUrl}/password-update-failed`, 303);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -41,13 +39,9 @@ export async function POST(req: NextRequest) {
       data: { password: hashedPassword },
     });
 
-    return NextResponse.redirect(
-      `${process.env.APP_URL}/password-updated-success`
-    );
+    return NextResponse.redirect(`${appUrl}/password-updated-success`, 303);
   } catch (error) {
     console.error("Erreur :", error);
-    return NextResponse.redirect(
-      `${process.env.APP_URL}/password-update-failed`
-    );
+    return NextResponse.redirect(`${appUrl}/password-update-failed`, 303);
   }
 }

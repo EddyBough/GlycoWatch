@@ -4,6 +4,8 @@ import { encode } from "next-auth/jwt"; // Fonction NextAuth pour encoder le tok
 sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
 
 export async function sendResetEmail(email: string) {
+  const appUrl = process.env.APP_URL || "http://localhost:3000";
+
   try {
     const resetToken = await encode({
       secret: process.env.NEXTAUTH_SECRET || "",
@@ -11,7 +13,7 @@ export async function sendResetEmail(email: string) {
       maxAge: 60 * 60, // Expire dans 1 heure
     });
 
-    const resetLink = `${process.env.APP_URL}/reset-password?token=${resetToken}`;
+    const resetLink = `${appUrl}/reset-password?token=${resetToken}`;
 
     const msg = {
       to: email,
