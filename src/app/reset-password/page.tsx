@@ -1,11 +1,11 @@
-"use client";
-
 import { WaveBackground } from "@/components/WaveBackground";
-import { useSearchParams } from "next/navigation";
 
-export default function ResetPassword() {
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+export default function ResetPassword({
+  searchParams,
+}: {
+  searchParams: { token?: string };
+}) {
+  const token = searchParams?.token;
 
   return (
     <div className="relative min-h-screen isolate">
