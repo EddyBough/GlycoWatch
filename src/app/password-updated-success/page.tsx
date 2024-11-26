@@ -2,7 +2,7 @@
 
 import { WaveBackground } from "@/components/WaveBackground";
 
-export default function PasswordUpdatedWithSuccess() {
+export default function PasswordUpdatedSuccess() {
   return (
     <div className="relative min-h-screen isolate">
       <WaveBackground />
@@ -16,9 +16,8 @@ export default function PasswordUpdatedWithSuccess() {
           <div>
             <div className="relative text-center">
               {" "}
-              <span className="text-[#00cba9]">
-                Votre mot de passe à été modifié avec succès, vous pouvez
-                maintenant quitter cette page et tenter de vous connecter.
+              <span className="text-green-500">
+                Votre mot de passe est modifié avec succès
               </span>
             </div>
           </div>
