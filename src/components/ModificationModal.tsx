@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 interface ModificationModalProps {
   isOpen: boolean;
   title: string;
   initialValue: number;
-  onSubmit: (newValue: number) => void;
+  insulinValue?: number | null;
+  onSubmit: (newGlycemyLevel: number, newInsulinDose: number) => void;
   onCancel: () => void;
 }
 
@@ -12,42 +13,53 @@ const ModificationModal: React.FC<ModificationModalProps> = ({
   isOpen,
   title,
   initialValue,
+  insulinValue,
   onSubmit,
   onCancel,
 }) => {
-  const [inputValue, setInputValue] = useState(initialValue.toString());
+  const [newGlycemyLevel, setNewGlycemyLevel] = useState(initialValue);
+  const [newInsulinDose, setNewInsulinDose] = useState(insulinValue || 0);
 
   if (!isOpen) return null;
 
-  const handleSubmit = () => {
-    const parsedValue = parseFloat(inputValue);
-    if (!isNaN(parsedValue)) {
-      onSubmit(parsedValue);
-    } else {
-      alert("Veuillez entrer une valeur numérique valide.");
-    }
-  };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm mx-auto">
-        <h2 className="text-lg font-semibold mb-4">{title}</h2>
-        <input
-          type="number"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4"
-        />
-        <div className="flex justify-end space-x-4">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+        <h2 className="text-xl font-bold mb-4">{title}</h2>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Nouveau taux de glycémie
+            </label>
+            <input
+              type="number"
+              value={newGlycemyLevel}
+              onChange={(e) => setNewGlycemyLevel(Number(e.target.value))}
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Nouvelle dose d&apos;insuline
+            </label>
+            <input
+              type="number"
+              value={newInsulinDose}
+              onChange={(e) => setNewInsulinDose(Number(e.target.value))}
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+          </div>
+        </div>
+        <div className="flex justify-end space-x-2 mt-6">
           <button
-            onClick={handleSubmit}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
+            onClick={() => onSubmit(newGlycemyLevel, newInsulinDose)}
+            className="bg-green-500 text-white px-4 py-2 rounded-lg"
           >
-            Soumettre
+            Confirmer
           </button>
           <button
             onClick={onCancel}
-            className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition"
+            className="bg-gray-500 text-white px-4 py-2 rounded-lg"
           >
             Annuler
           </button>

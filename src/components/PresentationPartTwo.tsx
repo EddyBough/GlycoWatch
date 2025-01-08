@@ -1,4 +1,4 @@
-import React from "react";
+import Image from "next/image";
 
 export function PresentationPartTwo() {
   return (
@@ -26,9 +26,11 @@ export function PresentationPartTwo() {
           </p>
         </div>
         <div className="w-full md:w-1/2 lg:mt-9">
-          <img
+          <Image
             src="/image/freedom-image.jpg"
             alt="Glucose Chart"
+            width={400}
+            height={400}
             className="rounded-2xl shadow-2xl w-full max-w-md mx-auto transform hover:scale-105 transition-transform duration-300 lg:-mt-6"
           />
         </div>

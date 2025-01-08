@@ -11,6 +11,7 @@ import { BuiltInProviderType } from "next-auth/providers/index";
 import { WaveBackground } from "@/components/WaveBackground";
 import ErrorModal from "@/components/errorModal";
 import { ClipLoader } from "react-spinners";
+import Image from "next/image";
 
 export default function SignIn() {
   const [providers, setProviders] = useState<Record<
@@ -145,9 +146,11 @@ export default function SignIn() {
                     >
                       {provider.name}
                       {iconSrc && (
-                        <img
+                        <Image
                           src={iconSrc}
                           alt={`${provider.name} Icon`}
+                          width={20}
+                          height={20}
                           className="ml-2 w-5 h-5"
                         />
                       )}

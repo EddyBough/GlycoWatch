@@ -98,7 +98,7 @@ export default function GetMeasurementMonthly({ userId }: { userId: number }) {
         <select
           value={month}
           onChange={(e) => setMonth(parseInt(e.target.value))}
-          className="px-3 py-2 border rounded"
+          className="px-3 py-2 border rounded bg-white"
         >
           {Array.from({ length: 12 }, (_, i) => (
             <option key={i} value={i}>

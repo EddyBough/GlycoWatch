@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Calendar from "react-calendar";
@@ -32,14 +32,12 @@ const Dashboard = () => {
   const router = useRouter();
   const [measurements, setMeasurements] = useState<Measurement[]>([]);
   const [glycemyLevel, setGlycemyLevel] = useState<string>("");
+  const [insulinDose, setInsulinDose] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [showModificationModal, setModificationModal] = useState(false);
   const [selectedMeasurement, setSelectedMeasurement] =
     useState<Measurement | null>(null);
+  const [showModificationModal, setModificationModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedMeasurementForDelete, setSelectedMeasurementForDelete] =
-    useState<Measurement | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -67,66 +65,66 @@ const Dashboard = () => {
   const handleAddMeasurement = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (glycemyLevel === "" || isNaN(parseFloat(glycemyLevel))) {
+    if (!glycemyLevel || isNaN(parseFloat(glycemyLevel))) {
       alert("Veuillez entrer une valeur valide pour le taux de glycémie");
       return;
     }
 
     const glycemyLevelFloat = parseFloat(glycemyLevel);
+    const insulinDoseFloat = insulinDose ? parseFloat(insulinDose) : null;
 
     if (!selectedDate) {
       alert("Veuillez sélectionner une date");
       return;
     }
 
-    // Create new date with date selected and current time
+    // Combine selected date with current time
     const currentTime = new Date();
-    const dateWithTime = new Date(
-      selectedDate.setHours(currentTime.getHours(), currentTime.getMinutes())
+    const dateWithTime = new Date(selectedDate);
+    dateWithTime.setHours(
+      currentTime.getHours(),
+      currentTime.getMinutes(),
+      0,
+      0
     );
 
-    const newMeasurement = await addMeasurement(
-      session?.user?.id,
-      glycemyLevelFloat,
-      dateWithTime
-    );
-    if (newMeasurement) {
-      setMeasurements((prev) => [...prev, newMeasurement]);
-      setGlycemyLevel("");
+    try {
+      const newMeasurement = await addMeasurement(
+        session?.user?.id,
+        glycemyLevelFloat,
+        insulinDoseFloat,
+        dateWithTime
+      );
+
+      if (newMeasurement) {
+        setMeasurements((prev) => [...prev, newMeasurement]);
+        setGlycemyLevel("");
+        setInsulinDose("");
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de la mesure :", error);
     }
   };
 
-  const getMeasurementsForDate = (date: Date) => {
-    if (!Array.isArray(measurements)) return [];
-    return measurements.filter(
-      (measurement) =>
-        format(new Date(measurement.date), "yyyy-MM-dd") ===
-        format(date, "yyyy-MM-dd")
-    );
-  };
-
-  const getMeasurementsForSelectedDate = () => {
-    if (!Array.isArray(measurements)) return [];
-    return measurements.filter(
-      (measurement) =>
-        format(new Date(measurement.date), "yyyy-MM-dd") ===
-        format(selectedDate ?? new Date(), "yyyy-MM-dd")
-    );
-  };
-
-  // Function for display the Modal on true and get the Measure selected
-  const handleEditClick = (measurement: Measurement) => {
-    setSelectedMeasurement(measurement);
-    setModificationModal(true);
-  };
-
-  // Function for validation and actualization of the Glycemy Level without refresh the page
-  const handleConfirmEdit = async (newValue: number) => {
+  const handleEditMeasurement = async (
+    newGlycemyLevel: number,
+    newInsulinDose: number | null
+  ) => {
     if (selectedMeasurement) {
-      await editMeasurement(selectedMeasurement.id, newValue);
+      await editMeasurement(
+        selectedMeasurement.id,
+        newGlycemyLevel,
+        newInsulinDose
+      );
       setMeasurements((prev) =>
         prev.map((m) =>
-          m.id === selectedMeasurement.id ? { ...m, glycemyLevel: newValue } : m
+          m.id === selectedMeasurement.id
+            ? {
+                ...m,
+                glycemyLevel: newGlycemyLevel,
+                insulinDose: newInsulinDose,
+              }
+            : m
         )
       );
       setModificationModal(false);
@@ -134,28 +132,30 @@ const Dashboard = () => {
     }
   };
 
-  // Function for display the confirmationModal on true and get the Measure selected
-  const handleDeleteClick = (measurement: Measurement) => {
-    setSelectedMeasurementForDelete(measurement);
-    setShowDeleteModal(true);
-  };
-
-  // Function for validation of deletion and actualization of the Glycemy Level's array without refresh the page
-  const handleConfirmDeleteMeasurement = async () => {
-    if (selectedMeasurementForDelete) {
-      await deleteMeasurement(selectedMeasurementForDelete.id);
+  const handleDeleteMeasurement = async () => {
+    if (selectedMeasurement) {
+      await deleteMeasurement(selectedMeasurement.id);
       setMeasurements((prev) =>
-        prev.filter((m) => m.id !== selectedMeasurementForDelete.id)
+        prev.filter((m) => m.id !== selectedMeasurement.id)
       );
       setShowDeleteModal(false);
-      setSelectedMeasurementForDelete(null);
+      setSelectedMeasurement(null);
     }
   };
 
-  const handleCancelDeleteModal = () => {
-    setShowDeleteModal(false);
-    setSelectedMeasurementForDelete(null);
-  };
+  const getMeasurementsForDate = (date: Date) =>
+    measurements.filter(
+      (measurement) =>
+        format(new Date(measurement.date), "yyyy-MM-dd") ===
+        format(date, "yyyy-MM-dd")
+    );
+
+  const getMeasurementsForSelectedDate = () =>
+    measurements.filter(
+      (measurement) =>
+        format(new Date(measurement.date), "yyyy-MM-dd") ===
+        format(selectedDate ?? new Date(), "yyyy-MM-dd")
+    );
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#00cba9]/10 to-white/50">
@@ -177,48 +177,48 @@ const Dashboard = () => {
 
         <div className="grid gap-8 lg:grid-cols-2">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
-            <div className="calendar-container">
-              <Calendar
-                locale="fr"
-                onChange={(value) => {
-                  if (value && !Array.isArray(value)) {
-                    setSelectedDate(value);
-                  } else if (Array.isArray(value)) {
-                    setSelectedDate(value[0]);
-                  }
-                }}
-                value={selectedDate ?? new Date()}
-                tileContent={({ date }) => {
-                  const dayMeasurements = getMeasurementsForDate(date);
-                  return dayMeasurements.length > 0 ? (
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {dayMeasurements.map((_, index) => (
-                        <div
-                          key={index}
-                          className="w-1.5 h-1.5 bg-[#00cba9] rounded-full"
-                        />
-                      ))}
-                    </div>
-                  ) : null;
-                }}
-                className="!w-full !border-none !rounded-xl shadow-sm"
-              />
-            </div>
+            <Calendar
+              locale="fr"
+              onChange={(value) => {
+                setSelectedDate(value instanceof Date ? value : null);
+              }}
+              value={selectedDate ?? new Date()}
+              tileContent={({ date }) => {
+                const dayMeasurements = getMeasurementsForDate(date);
+                return dayMeasurements.length > 0 ? (
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {dayMeasurements.map((_, index) => (
+                      <div
+                        key={index}
+                        className="w-1.5 h-1.5 bg-[#00cba9] rounded-full"
+                      />
+                    ))}
+                  </div>
+                ) : null;
+              }}
+              className="!w-full !border-none !rounded-xl shadow-sm"
+            />
 
             <form onSubmit={handleAddMeasurement} className="mt-6 space-y-4">
-              <div>
-                <input
-                  type="number"
-                  value={glycemyLevel}
-                  onChange={(e) => setGlycemyLevel(e.target.value)}
-                  placeholder="Taux de glycémie"
-                  step="0.1"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
-                />
-              </div>
+              <input
+                type="number"
+                value={glycemyLevel}
+                onChange={(e) => setGlycemyLevel(e.target.value)}
+                placeholder="Taux de glycémie"
+                step="0.1"
+                className="w-full px-4 py-3 rounded-lg border"
+              />
+              <input
+                type="number"
+                value={insulinDose || ""}
+                onChange={(e) => setInsulinDose(e.target.value)}
+                placeholder="Dose d'insuline (optionnelle)"
+                step="0.1"
+                className="w-full px-4 py-3 rounded-lg border"
+              />
               <button
                 type="submit"
-                className="w-full bg-[#00cba9] hover:bg-[#00b598] text-white py-3 px-6 rounded-lg transition-colors duration-200 font-medium"
+                className="w-full bg-[#00cba9] text-white py-3 rounded-lg"
               >
                 Ajouter une mesure
               </button>
@@ -242,105 +242,82 @@ const Dashboard = () => {
                     <p className="text-lg font-medium">
                       {measurement.glycemyLevel} mg/L
                     </p>
+                    {measurement.insulinDose && (
+                      <p className="text-sm text-gray-500">
+                        {measurement.insulinDose} U d&apos;insuline
+                      </p>
+                    )}
                     <p className="text-sm text-gray-500">
                       {format(new Date(measurement.date), "HH:mm", {
                         locale: fr,
                       })}
                     </p>
                   </div>
-                  <div className="flex flex-row space-x-10">
-                    <div>
-                      <div>
-                        <button onClick={() => handleEditClick(measurement)}>
-                          <svg
-                            className=" mt-3"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                          </svg>
-                        </button>
-                      </div>
-
-                      {/* confirmation modal */}
-                      {showModificationModal && selectedMeasurement && (
-                        <ModificationModal
-                          isOpen={showModificationModal}
-                          title="Modifier la mesure"
-                          initialValue={selectedMeasurement.glycemyLevel}
-                          onSubmit={handleConfirmEdit}
-                          onCancel={() => setModificationModal(false)}
-                        />
-                      )}
-                    </div>
-
-                    <div>
-                      <button
-                        onClick={() => handleDeleteClick(measurement)}
-                        className="p-2 text-gray-600 hover:text-red-500 transition-colors"
-                      >
-                        <svg
-                          className="mt-1"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M3 6h18" />
-                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                        </svg>
-                      </button>
-
-                      {showDeleteModal && selectedMeasurementForDelete && (
-                        <ConfirmationModal
-                          isOpen={showDeleteModal}
-                          title="Confirmation de suppression"
-                          message="Êtes-vous sûr de vouloir supprimer cette mesure ?"
-                          onConfirm={handleConfirmDeleteMeasurement}
-                          onCancel={handleCancelDeleteModal}
-                        />
-                      )}
-                    </div>
+                  <div className="flex space-x-4">
+                    <button
+                      onClick={() => {
+                        setSelectedMeasurement(measurement);
+                        setModificationModal(true);
+                      }}
+                      className="text-blue-500 hover:text-blue-700"
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSelectedMeasurement(measurement);
+                        setShowDeleteModal(true);
+                      }}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      Supprimer
+                    </button>
                   </div>
                 </div>
               ))}
-              {getMeasurementsForSelectedDate().length === 0 && (
-                <p className="text-center text-gray-500 py-8">
-                  Aucune mesure pour cette date
-                </p>
-              )}
             </div>
           </div>
+
           <div>
-            {session?.user.id && (
+            {session?.user?.id && (
               <MeasurementChart
                 measurements={measurements}
                 selectedDate={selectedDate}
               />
             )}
           </div>
+
           {session?.user?.id && (
             <div>
               <GetMeasurementMonthly userId={session.user.id} />
             </div>
           )}
+
           <div className="fixed bottom-4 right-4 w-96 shadow-lg">
             <ChatbotComponent />
           </div>
         </div>
+
+        {showModificationModal && selectedMeasurement && (
+          <ModificationModal
+            isOpen={showModificationModal}
+            title="Modifier la mesure"
+            initialValue={selectedMeasurement.glycemyLevel}
+            insulinValue={selectedMeasurement.insulinDose}
+            onSubmit={handleEditMeasurement}
+            onCancel={() => setModificationModal(false)}
+          />
+        )}
+
+        {showDeleteModal && (
+          <ConfirmationModal
+            isOpen={showDeleteModal}
+            title="Supprimer la mesure"
+            message="Êtes-vous sûr de vouloir supprimer cette mesure ?"
+            onConfirm={handleDeleteMeasurement}
+            onCancel={() => setShowDeleteModal(false)}
+          />
+        )}
       </div>
     </div>
   );
