@@ -1,4 +1,4 @@
-import React from "react";
+import Image from "next/image";
 
 export function PresentationPartOne() {
   return (
@@ -40,9 +40,11 @@ export function PresentationPartOne() {
           </div>
         </div>
         <div className="w-full md:w-1/2 lg:mt-9">
-          <img
+          <Image
             src="/image/newcapturedashboard.png"
             alt="Medical App Interface"
+            width={400}
+            height={400}
             className="rounded-2xl shadow-2xl w-full max-w-md mx-auto transform hover:scale-105 transition-transform duration-300"
           />
         </div>

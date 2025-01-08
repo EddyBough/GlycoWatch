@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Lock, FileText, LayoutDashboard, User, LogOut } from "lucide-react";
+import Image from "next/image";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +44,7 @@ export const Navbar = () => {
       <nav className="flex items-center justify-between w-full py-4 px-4 text-lg">
         <div className="-ml-6">
           <Link href="/">
-            <img
+            <Image
               src="/image/glycoWatchLogo1.svg"
               alt="GlycoWatch Logo"
               width={150}
@@ -56,7 +57,12 @@ export const Navbar = () => {
             className="h-6 w-6 cursor-pointer md:hidden block"
             onClick={toggleMenu}
           >
-            <img src="/image/icon-menu.png" alt="Menu" width={24} height={24} />
+            <Image
+              src="/image/icon-menu.png"
+              alt="Menu"
+              width={24}
+              height={24}
+            />
           </button>
         </div>
 
@@ -83,7 +89,7 @@ export const Navbar = () => {
           >
             <div className="flex justify-between items-center backdrop-blur-md md:hidden">
               <Link href="/" onClick={handleLinkClick}>
-                <img
+                <Image
                   src="/image/glycoWatchLogo1.svg"
                   alt="GlycoWatch Logo"
                   width={150}
@@ -91,7 +97,7 @@ export const Navbar = () => {
                 />
               </Link>
               <button onClick={toggleMenu} className="h-6 w-6 mr-8">
-                <img
+                <Image
                   src="/image/icon-close.png"
                   alt="Close"
                   width={24}
