@@ -9,15 +9,16 @@ export function PresentationPartOne() {
       <div className="flex flex-col md:flex-row items-start justify-between gap-12">
         <div className="w-full md:w-1/2 flex flex-col bg-white/20 backdrop-blur-sm rounded-2xl shadow-xl p-6 mb-8">
           <p className="text-lg text-gray-700 mb-6">
-            Bienvenue sur notre toute nouvelle application GlycoWatch®, celle ci
-            évoluera au fil du temps pour proposer toujours plus de
-            fonctionnalités intéressante afin de devenir votre allié au
-            quotidien !
+            Bienvenue sur notre toute nouvelle application GlycoWatch®, elle est
+            entièrement gratuite. Cette application vous permettra de suivre
+            votre glycémie au quotidien en toute sécurité.
           </p>
           <p className="text-lg text-gray-700 mb-6">
-            Inscrivez vous afin de pouvoir utiliser toute nos fonctionnalités.
-            Plus besoin de tout écrire sur papier, GlycoWatch® est là pour vous
-            !
+            Vous pouvez ajouter vos mesures de glycémie, suivre votre
+            progression quotidiennement grâce à un graphique et dans un
+            calendrier pensé pour avoir la meilleure ergonomie. Vous pourrez
+            éditer vos données en un fichier PDF. D&apos;autres fonctionnalités
+            sont à venir.
           </p>
           <p className="text-lg text-gray-700 mb-8">
             Vous pouvez également partager en toute discrétion vos données avec

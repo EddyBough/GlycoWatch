@@ -19,7 +19,7 @@ export function Footer() {
                 className="flex items-center justify-center text-gray-600 hover:text-[#00cba9] transition-colors"
               >
                 <Mail className="h-5 w-5 mr-2" />
-                ebdeveloper@outlook.fr
+                contact@innov8digital.fr
               </a>
 
               <div className="flex items-center justify-center text-gray-600">
