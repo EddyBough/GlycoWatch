@@ -293,7 +293,7 @@ const Dashboard = () => {
             </div>
           )}
 
-          <div className="fixed bottom-4 right-4 w-96 shadow-lg">
+          <div className="fixed bottom-4 right-4 w-96 shadow-lg z-10">
             <ChatbotComponent />
           </div>
         </div>
