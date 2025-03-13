@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Chatbot from "react-chatbot-kit";
 import "react-chatbot-kit/build/main.css";
-
 import config from "./ChatbotConfig";
 import MessageParser from "./MessageParser";
 import ActionProvider from "./ActionProvider";
+import { BotIcon } from "lucide-react";
 
 const ChatbotComponent = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,23 +24,9 @@ const ChatbotComponent = () => {
         {isOpen ? (
           <span style={{ fontSize: "20px", fontWeight: "bold" }}>×</span> // Croix
         ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 2c4.418 0 8 3.582 8 8s-3.582 8-8 8-8-3.582-8-8 3.582-8 8-8zm0 0v4m0 8h0"
-            />
-          </svg> // Icône simple représentant un robot
+          <BotIcon />
         )}
       </div>
-
       {/* Chatbot */}
       <div
         className={`mt-3 shadow-lg bg-white rounded-lg transition-transform duration-300 ${
