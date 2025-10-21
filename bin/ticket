@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+TITLE="${1:-}"
+if [[ -z "$TITLE" ]]; then
+  read -rp "Titre de l'issue: " TITLE
+fi
+echo "Description (optionnelle, une ligne) : "
+read -r BODY || true
+gh issue create --title "$TITLE" --body "${BODY:-}" --label "feature"
