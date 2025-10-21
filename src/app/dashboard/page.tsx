@@ -158,25 +158,25 @@ const Dashboard = () => {
     );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#00cba9]/10 to-white/50">
+    <div className="min-h-screen">
       <BackgroundDashboard />
 
       <div className="container relative mx-auto p-4 sm:p-6 lg:p-8">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl p-6 mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">
             Bienvenue,{" "}
             {session?.user?.firstname
               ? `${session.user.firstname} ${session.user.name}`
               : session?.user?.name}{" "}
             !
           </h1>
-          <p className="text-gray-600">
+          <p className="text-white/70">
             Suivez vos mesures de glycémie quotidiennes
           </p>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-2">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl p-6">
             <Calendar
               locale="fr"
               onChange={(value) => {
@@ -190,7 +190,7 @@ const Dashboard = () => {
                     {dayMeasurements.map((_, index) => (
                       <div
                         key={index}
-                        className="w-1.5 h-1.5 bg-[#00cba9] rounded-full"
+                        className="w-1.5 h-1.5 bg-emerald-500 rounded-full"
                       />
                     ))}
                   </div>
@@ -206,7 +206,7 @@ const Dashboard = () => {
                 onChange={(e) => setGlycemyLevel(e.target.value)}
                 placeholder="Taux de glycémie"
                 step="0.1"
-                className="w-full px-4 py-3 rounded-lg border"
+                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
               />
               <input
                 type="number"
@@ -214,19 +214,19 @@ const Dashboard = () => {
                 onChange={(e) => setInsulinDose(e.target.value)}
                 placeholder="Dose d'insuline (optionnelle)"
                 step="0.1"
-                className="w-full px-4 py-3 rounded-lg border"
+                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
               />
               <button
                 type="submit"
-                className="w-full bg-[#00cba9] text-white py-3 rounded-lg"
+                className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white py-3 rounded-lg transition-all duration-200 font-medium shadow-lg hover:shadow-emerald-500/50"
               >
                 Ajouter une mesure
               </button>
             </form>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
-            <h2 className="text-xl font-semibold mb-4">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">
               Mesures du{" "}
               {format(selectedDate ?? new Date(), "dd MMMM yyyy", {
                 locale: fr,
@@ -236,18 +236,18 @@ const Dashboard = () => {
               {getMeasurementsForSelectedDate().map((measurement) => (
                 <div
                   key={measurement.id}
-                  className="flex items-center justify-between p-4 rounded-lg bg-white shadow-sm"
+                  className="flex items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10 shadow-sm"
                 >
                   <div>
-                    <p className="text-lg font-medium">
+                    <p className="text-lg font-medium text-white">
                       {measurement.glycemyLevel} mg/L
                     </p>
                     {measurement.insulinDose && (
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-white/60">
                         {measurement.insulinDose} U d&apos;insuline
                       </p>
                     )}
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-white/60">
                       {format(new Date(measurement.date), "HH:mm", {
                         locale: fr,
                       })}
@@ -259,7 +259,7 @@ const Dashboard = () => {
                         setSelectedMeasurement(measurement);
                         setModificationModal(true);
                       }}
-                      className="text-blue-500 hover:text-blue-700"
+                      className="text-cyan-400 hover:text-cyan-300 transition-colors"
                     >
                       Modifier
                     </button>
@@ -268,7 +268,7 @@ const Dashboard = () => {
                         setSelectedMeasurement(measurement);
                         setShowDeleteModal(true);
                       }}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-red-400 hover:text-red-300 transition-colors"
                     >
                       Supprimer
                     </button>

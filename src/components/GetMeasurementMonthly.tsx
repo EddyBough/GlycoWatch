@@ -128,17 +128,17 @@ export default function GetMeasurementMonthly({ userId }: { userId: number }) {
   };
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 lg:mt-0 mt-8 mb-8">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">Mesures du mois</h2>
+    <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-lg p-6 lg:mt-0 mt-8 mb-8">
+      <h2 className="text-2xl font-bold text-white mb-4">Mesures du mois</h2>
 
       <div className="flex space-x-2 mb-4">
         <select
           value={month}
           onChange={(e) => setMonth(parseInt(e.target.value))}
-          className="px-3 py-2 border rounded bg-white"
+          className="px-3 py-2 bg-white/5 border border-white/10 rounded text-white"
         >
           {Array.from({ length: 12 }, (_, i) => (
-            <option key={i} value={i}>
+            <option key={i} value={i} className="bg-gray-900">
               {new Date(0, i).toLocaleString("fr", { month: "long" })}
             </option>
           ))}
@@ -147,7 +147,7 @@ export default function GetMeasurementMonthly({ userId }: { userId: number }) {
           type="number"
           value={year}
           onChange={(e) => setYear(parseInt(e.target.value))}
-          className="px-3 py-2 border rounded"
+          className="px-3 py-2 bg-white/5 border border-white/10 rounded text-white"
           min="2024"
           max={new Date().getFullYear()}
         />
@@ -155,7 +155,7 @@ export default function GetMeasurementMonthly({ userId }: { userId: number }) {
 
       <button
         onClick={generatePdf}
-        className="mt-6 w-full bg-[#00cba9] text-white font-medium py-3 rounded-lg hover:bg-[#00b598] transition duration-200"
+        className="mt-6 w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-medium py-3 rounded-lg transition-all duration-200 shadow-lg hover:shadow-emerald-500/50"
       >
         Télécharger en PDF
       </button>

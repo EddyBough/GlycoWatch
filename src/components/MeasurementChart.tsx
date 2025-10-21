@@ -43,7 +43,7 @@ export default function MeasurementChart({
         label: "Niveau d'insuline",
         data: [],
         fill: false,
-        borderColor: "#00cba9",
+        borderColor: "rgb(16, 185, 129)",
         tension: 0.2,
       },
     ],
@@ -71,7 +71,7 @@ export default function MeasurementChart({
           label: "Niveau de glycémie",
           data: data,
           fill: false,
-          borderColor: "#00cba9",
+          borderColor: "rgb(16, 185, 129)",
           tension: 0.2,
         },
       ],
@@ -79,8 +79,8 @@ export default function MeasurementChart({
   }, [measurements, selectedDate]);
 
   return (
-    <div className="container bg-white p-6 rounded-xl shadow-lg w-full max-h-[400px]">
-      <h2 className="text-xl font-semibold mb-4">
+    <div className="container bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-xl shadow-lg w-full max-h-[400px]">
+      <h2 className="text-xl font-semibold text-white mb-4">
         Évolution du niveau de glycémie - {selectedDate?.toLocaleDateString()}
       </h2>
       <Line
@@ -96,26 +96,49 @@ export default function MeasurementChart({
               right: 10,
             },
           },
+          plugins: {
+            legend: {
+              labels: {
+                color: "white",
+              },
+            },
+          },
           scales: {
             x: {
               display: true,
-              title: { display: true, text: "Heure" },
+              title: {
+                display: true,
+                text: "Heure",
+                color: "rgba(255, 255, 255, 0.7)",
+              },
               ticks: {
                 maxRotation: 45,
                 minRotation: 0,
                 autoSkip: true,
+                color: "rgba(255, 255, 255, 0.7)",
                 font: {
                   size: 10,
                 },
               },
+              grid: {
+                color: "rgba(255, 255, 255, 0.1)",
+              },
             },
             y: {
               display: true,
-              title: { display: true, text: "Niveau de glycémie (mg/L)" },
+              title: {
+                display: true,
+                text: "Niveau de glycémie (mg/L)",
+                color: "rgba(255, 255, 255, 0.7)",
+              },
               ticks: {
+                color: "rgba(255, 255, 255, 0.7)",
                 font: {
                   size: 10,
                 },
+              },
+              grid: {
+                color: "rgba(255, 255, 255, 0.1)",
               },
             },
           },
