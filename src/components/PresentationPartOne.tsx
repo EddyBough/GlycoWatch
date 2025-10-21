@@ -100,11 +100,11 @@ export function PresentationPartOne() {
       <div className="w-full max-w-6xl mb-20">
         <div className="">
           <Image
-            src="/image/newcapturedashboard.png"
+            src="/image/Galaxy-Tab-S7-localhost.png"
             alt="Interface GlycoWatch - Suivi glycémique pour diabète Type 1, Type 2 et gestationnel"
             width={1400}
             height={900}
-            className="w-full h-auto"
+            className="lg:w-1/2 lg:h-1/2 mx-auto"
             priority
           />
         </div>

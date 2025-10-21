@@ -69,11 +69,11 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
 
   const handleDeleteAccount = async () => {
     try {
-      await deleteUser(profile.userId); // Appel direct à la fonction côté serveur
+      await deleteUser(profile.userId); // Call the function directly on the server
       await signOut(session?.user.id);
       toast.success("Compte supprimé avec succès");
       setTimeout(() => {
-        router.push("/home"); // Rediriger après suppression
+        router.push("/home"); // Redirect after deletion
       }, 2000);
     } catch (error) {
       toast.error("Erreur lors de la suppression du compte");
@@ -81,16 +81,16 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#00cba9]/10 to-white/50">
+    <div className="min-h-screen">
       <BackgroundDashboard />
       <ToastContainer />
 
       <div className="container relative mx-auto p-4 sm:p-6 lg:p-8">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Mon Profil</h1>
-          <p className="text-gray-600">
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl p-6 mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Mon Profil</h1>
+          <p className="text-white/70">
             Profil de{" "}
-            <span className="font-medium">
+            <span className="font-medium text-white">
               {session?.user?.firstname
                 ? `${session.user.firstname} ${session.user.name}`
                 : session?.user?.name}
@@ -98,11 +98,11 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
           </p>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-white block">
                   Nom
                 </label>
                 <input
@@ -110,13 +110,13 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                   placeholder="Votre nom"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-white block">
                   Prénom
                 </label>
                 <input
@@ -124,13 +124,13 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
                   name="firstname"
                   value={formData.firstname}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                   placeholder="Votre prénom"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-white block">
                   Date de naissance
                 </label>
                 <input
@@ -142,12 +142,12 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
                       : ""
                   }
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-white block">
                   Téléphone
                 </label>
                 <input
@@ -155,14 +155,14 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                   placeholder="Votre numéro de téléphone"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 block">
+              <label className="text-sm font-medium text-white block">
                 Adresse
               </label>
               <input
@@ -170,13 +170,13 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                 placeholder="Votre adresse complète"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 block">
+              <label className="text-sm font-medium text-white block">
                 Médicaments
               </label>
               <input
@@ -184,13 +184,13 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
                 name="medications"
                 value={formData.medications}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                 placeholder="Liste de vos médicaments"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 block">
+              <label className="text-sm font-medium text-white block">
                 Problèmes de santé
               </label>
               <input
@@ -198,7 +198,7 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
                 name="healthIssues"
                 value={formData.healthIssues}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                 placeholder="Vos problèmes de santé"
               />
             </div>
@@ -206,7 +206,7 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full mb-16 bg-[#00cba9] hover:bg-[#00b598] text-white py-3 px-6 rounded-lg transition-colors duration-200 font-medium"
+                className="w-full mb-16 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white py-3 px-6 rounded-lg transition-all duration-200 font-medium shadow-lg hover:shadow-emerald-500/50"
               >
                 Mettre à jour le profil
               </button>
@@ -216,7 +216,7 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
           {/* Modal de confirmation */}
           <button
             onClick={() => setShowModal(true)}
-            className="w-full bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-lg transition-colors duration-200 font-medium"
+            className="w-full bg-red-500/90 hover:bg-red-600 text-white py-3 px-6 rounded-lg transition-all duration-200 font-medium shadow-lg hover:shadow-red-500/50"
           >
             Supprimer votre compte
           </button>

@@ -259,7 +259,7 @@ const Dashboard = () => {
                         setSelectedMeasurement(measurement);
                         setModificationModal(true);
                       }}
-                      className="text-cyan-400 hover:text-cyan-300 transition-colors"
+                      className="text-green-400 hover:text-cyan-300 transition-colors"
                     >
                       Modifier
                     </button>
