@@ -1,0 +1,263 @@
+# .cursorrules
+
+# Objectif: Empêcher toute action destructive ou hors scope par l’agent/LLM dans Cursor.
+
+# Ton stack cible: Next.js (App Router), TypeScript, pnpm, Prisma, NextAuth, Tailwind, shadcn/ui, Vercel, Neon.
+
+# Style: Plan d’abord → Diff/Review → Exécution minimale → Vérifications → Commit → PR.
+
+###############################################################################
+
+## 0) PRINCIPES NON NÉGOCIABLES
+
+###############################################################################
+
+- Toujours produire un PLAN clair avant toute modification (liste de fichiers à créer/modifier/supprimer + commandes à exécuter).
+- Ne JAMAIS modifier un fichier hors du scope explicitement demandé.
+- Ne JAMAIS supprimer, écraser ou renommer des fichiers sans justification ET validation explicite dans le plan.
+- Préférer créer/étendre plutôt que réécrire/supprimer.
+- Toujours proposer un DIFF lisible avant d’écrire réellement sur disque.
+- Toujours utiliser **pnpm** (jamais npm/yarn) et respecter les scripts existants.
+- Respect strict des conventions TypeScript/ESLint/Prettier/Biome si présents.
+- Tous les changements doivent passer par une branche feature + PR (jamais push sur main).
+- Si un doute existe → poser une question plutôt que deviner.
+
+###############################################################################
+
+## 1) PÉRIMÈTRE & ARBORESCENCE (MONOREPO)
+
+###############################################################################
+
+# EDIT-ME si différent
+
+Monorepo conventionnel:
+
+- apps/\* : applications (ex: apps/web, apps/admin, apps/api)
+- packages/\* : libs partagées (ui, config, tsconfig, eslint-config, etc.)
+- tooling/\* : scripts, CI, générateurs
+- prisma/ : schémas & migrations si mono DB (sinon apps/\*/prisma)
+
+Règles:
+
+- Ne JAMAIS créer de code applicatif hors apps/\*.
+- Ne JAMAIS toucher aux dossiers protégés listés ci-dessous sans demande explicite.
+
+Dossiers PROTÉGÉS (lecture seule sauf mention expresse):
+
+- .git, .github, .husky
+- .env\*, env/**, config/secrets/**
+- migrations/ existantes (ne pas éditer rétroactivement)
+- node_modules/, .next/, dist/, build/
+- public/uploads/, storage/, data/prod/
+- scripts/infra/**, vercel/**, docker/\*\* (infrastructure)
+- **/generated/** (code généré)
+
+###############################################################################
+
+## 2) FICHIERS & CONTENU: AUTORISÉ / INTERDIT
+
+###############################################################################
+AUTORISÉ (si dans le scope demandé & après PLAN + DIFF):
+
+- Créer de nouveaux composants, routes, hooks, services, schémas Zod, tests.
+- Modifier des fichiers UNIQUEMENT listés dans le PLAN.
+- Ajouter des scripts pnpm non destructifs (lint, test, type-check).
+- Ajouter la doc locale (README.md, ADRs dans docs/).
+
+INTERDIT (sauf validation écrite explicite):
+
+- Éditer ou supprimer des fichiers hors du scope.
+- Toucher aux .env.\* (production, preview, CI) ou aux secrets.
+- Modifier l’historique Git, faire un `push --force`, ou rebase de main.
+- Altérer rétroactivement d’anciennes migrations Prisma/Drizzle.
+- Changer la config d’auth (NextAuth) sans plan de migration et tests.
+- Remplacer pnpm par npm/yarn.
+
+###############################################################################
+
+## 3) TERMINAL: LISTE NOIRE / LISTE BLANCHE
+
+###############################################################################
+LISTE NOIRE (NE JAMAIS EXÉCUTER):
+
+- rm -rf /, rm -rf .\* , rm -rf node_modules/ , git clean -xfd
+- docker system prune -a, docker volume prune -f
+- prisma migrate reset, prisma db push --force-reset, DROP DATABASE
+- psql -c "DROP ...", mysql -e "DROP ...", mongosh --eval "db.dropDatabase()"
+- vercel --prod (déploiement prod), vercel env pull/push prod
+- git push --force, git rebase -i main sur main
+- npm audit fix --force, npm i -g ...
+- any command with sudo
+
+LISTE BLANCHE (OK si mentionnée dans le PLAN et non destructive):
+
+- pnpm i, pnpm lint, pnpm format, pnpm typecheck, pnpm build
+- pnpm test, pnpm test:watch (si défini)
+- pnpm dev (local uniquement)
+- prisma generate, prisma migrate dev (LOCAL UNIQUEMENT, voir § DB)
+- drizzle-kit generate (LOCAL), aucune action destructive
+- git switch -c feature/..., git add -A, git commit -m "..."
+- git push origin feature/...
+
+###############################################################################
+
+## 4) GIT WORKFLOW
+
+###############################################################################
+
+- Toujours créer une branche: feature/<ticket-id>-<slug>
+- Commits petits et atomiques, message conventionnel (feat|fix|chore|refactor|test|docs): scope: message
+- Jamais de commit qui casse le build, les types ou les tests.
+- Ouvrir une PR avec description: CONTEXTE → PLAN → CHANGEMENTS → TESTS → RISQUES.
+
+###############################################################################
+
+## 5) QUALITÉ & TESTS
+
+###############################################################################
+Avant tout commit:
+
+- pnpm typecheck (aucune erreur)
+- pnpm lint (aucune erreur bloquante)
+- pnpm test (succès sur tests impactés)
+- Si E2E/playwright/cypress existe: exécuter sur le périmètre modifié.
+
+Génération de code:
+
+- TypeScript strict.
+- Zod / schema validation côté server si input utilisateur.
+- Ne pas introduire de libs sans raison; préférer standard/stack existant.
+- UI: respecter Tailwind/shadcn; pas de CSS inline non nécessaire.
+
+###############################################################################
+
+## 6) ENV & SECRETS
+
+###############################################################################
+
+- Ne JAMAIS lire/écrire .env.production, .env.ci, secrets chiffrés.
+- Travailler UNIQUEMENT avec .env.local (non versionné).
+- Si une variable manque → documenter la clé et s’arrêter, NE PAS inventer de valeur.
+- Vercel/Neon/SendGrid/etc.: aucune commande CLI qui modifie les vars distantes.
+
+###############################################################################
+
+## 7) BASES DE DONNÉES (Prisma / Drizzle)
+
+###############################################################################
+
+- Toute opération DB est LOCALE par défaut. Interdit de viser la prod.
+- Exiger: DATABASE_URL_LOCAL (ou équivalent), jamais DATABASE_URL de prod.
+- Avant migration: afficher le plan (diff) → demander validation explicite.
+- Prisma:
+  - prisma generate (ok)
+  - prisma migrate dev (ok en local) → jamais reset sans drapeau de confirmation manuel.
+  - Interdit: prisma migrate reset, db push avec --force-reset.
+- Drizzle:
+  - drizzle-kit generate (ok)
+  - Interdit: appli de migrations destructives sans plan validé.
+
+Filets de sécurité:
+
+- Refuser toute commande DB si l’URL contient “prod”, “vercel”, “neon.tech” sans mode “sandbox”.
+- Interdire scripts qui drop/truncate tables sans CONFIRMATION écrite dans le PLAN + variable d’environnement manuelle `CONFIRM_RESET=YES` (non fournie par défaut).
+- Ne jamais modifier rétroactivement d’anciennes migrations: créer une nouvelle migration.
+
+###############################################################################
+
+## 8) DÉPLOIEMENTS (Vercel)
+
+###############################################################################
+
+- Interdit: déployer en prod depuis l’agent.
+- Pré-requis pour preview:
+  - Build local OK + tests OK + PR ouverte.
+  - Déploiement preview automatique par CI autorisé si déjà configuré.
+- L’agent ne modifie ni projets Vercel, ni alias, ni DNS.
+
+###############################################################################
+
+## 9) STYLE DE CODE & PÉDAGOGIE
+
+###############################################################################
+
+- Fournir les raisons des choix (une phrase suffit).
+- Commenter les points complexes (1-2 lignes, pas de roman).
+- Respecter l’architecture existante (App Router, server actions, services/ et lib/).
+- Ne pas migrer de paradigme (ex: fetch client → server) sans ticket dédié.
+
+###############################################################################
+
+## 10) FORMAT DE RÉPONSE DE L’AGENT (OBLIGATOIRE)
+
+###############################################################################
+Toujours répondre en 3 blocs:
+
+(1) PLAN
+
+- objectifs
+- fichiers impactés (liste exacte)
+- commandes prévues (liste exacte)
+- risques potentiels + mitigations
+
+(2) DIFF PROPOSÉ
+
+- montrer les diffs par fichier (patchs) sans écrire encore sur disque
+
+(3) ACTIONS SÛRES
+
+- “Appliquer les diffs maintenant ? (oui/non)”
+- “Exécuter ces commandes maintenant ? (oui/non)”
+
+Si l’utilisateur dit “oui”, n’exécuter QUE ce qui figure dans (3). Sinon, ne rien faire.
+
+###############################################################################
+
+## 11) RÈGLES SPÉCIFIQUES NEXT.JS / TS / UI
+
+###############################################################################
+
+- Next.js App Router: pages dans app/, server components par défaut, client components uniquement si nécessaire.
+- API routes: valider input (Zod), renvoyer erreurs typées.
+- Auth (NextAuth): ne pas modifier les providers/sessions sans plan et tests.
+- UI: shadcn/ui + Tailwind; respecter les patterns (Button, Card, Dialog, etc.).
+- pnpm workspaces: mettre toute nouvelle lib au bon scope (apps/_ vs packages/_).
+
+###############################################################################
+
+## 12) RACCORDEMENT À TES HABITUDES (EDIT-ME)
+
+###############################################################################
+
+- Gestion de tickets: nommer branches `feature/<id>-<slug>` (ex: feature/80-sendgrid-welcome-email)
+- Tests unitaires: Vitest (si présent) → créer tests à côté du fichier modifié `*.test.ts`.
+- Commit msg: conventional commits.
+- Lint/format: `pnpm biome check --write` ou `pnpm lint && pnpm format` (EDIT-ME selon ton setup).
+- Ne JAMAIS toucher aux workflows GitHub Actions sans ticket dédié.
+
+###############################################################################
+
+## 13) EXEMPLES D’ACTIONS AUTORISÉES
+
+###############################################################################
+✅ Ajouter un nouveau composant UI dans apps/web/src/components/…
+✅ Créer un route handler app/api/measurements/route.ts + schéma Zod + tests
+✅ Mettre à jour un service dans packages/shared/services/… avec tests
+✅ Lancer pnpm typecheck/lint/test/build en local
+✅ Générer une migration Prisma DEV après validation du diff
+
+❌ Modifier .env.production, secrets, Vercel env
+❌ Écraser des migrations existantes
+❌ Supprimer des fichiers hors scope
+❌ Déployer en prod, push --force, reset DB
+
+###############################################################################
+
+## 14) MOTS-CLÉS D’ARRÊT D’URGENCE
+
+###############################################################################
+Si l’agent détecte l’un des termes suivants dans une commande/URL/chemin → STOP immédiat + demande de confirmation:
+
+- “prod”, “production”, “neon.tech”, “vercel.com”, “drop”, “truncate”, “reset”, “--force”, “--force-reset”, “remove-all”, “prune -a”
+
+# Fin du fichier
