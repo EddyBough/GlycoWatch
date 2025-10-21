@@ -4,15 +4,15 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import ProfilePage from "./ProfilePage"; // Le composant qui affiche les données du profil
-import { getProfile, updateProfile } from "../../../lib/profile"; // Assurez-vous que ces fonctions existent
+import ProfilePage from "./ProfilePage"; // The component that displays the profile data
+import { getProfile } from "../../../lib/profile"; // Ensure that these functions exist
 
 export default function Profile() {
-  const { data: session, status } = useSession(); // `session` et `status` sont extraits ici
+  const { data: session, status } = useSession(); // `session` et `status` are extracted here
   const router = useRouter();
   const [profile, setProfile] = useState<UserProfile | null>(null);
 
-  // Interface pour typer le profil utilisateur
+  // Interface for the user profile
   interface UserProfile {
     id: number;
     userId: number;
@@ -21,26 +21,26 @@ export default function Profile() {
     phone: string | null;
     medications: string | null;
     healthIssues: string | null;
-    name: string; // Ajout de la propriété name
-    firstname: string; // Ajout de la propriété firstname
+    name: string; // Add the name property
+    firstname: string; // Add the firstname property
   }
 
-  // Redirection si non connecté
+  // Redirection if not connected
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/signin");
     }
   }, [status, router]);
 
-  // Charger les données de profil si la session est authentifiée
+  // Load the profile data if the session is authenticated
   useEffect(() => {
     const loadProfile = async () => {
       if (session?.user?.id) {
         try {
-          const data = await getProfile(session.user.id); // Récupérer les données du profil
+          const data = await getProfile(session.user.id); // Get the profile data
 
           if (data) {
-            // Mise à jour des données du profil si elles existent
+            // Update the profile data if it exists
             setProfile({
               id: data.id,
               userId: data.userId,
@@ -49,14 +49,14 @@ export default function Profile() {
               phone: data.phone ?? null,
               medications: data.medications ?? null,
               healthIssues: data.healthIssues ?? null,
-              name: data.user?.name ?? "", // Assure qu'on a une chaîne de caractères
-              firstname: data.user?.firstname ?? "", // Assure qu'on a une chaîne de caractères
+              name: data.user?.name ?? "", // Ensure we have a string
+              firstname: data.user?.firstname ?? "", // Ensure we have a string
             });
           } else {
-            console.error("Aucune donnée de profil trouvée.");
+            console.error("No profile data found.");
           }
         } catch (error) {
-          console.error("Erreur lors du chargement du profil:", error);
+          console.error("Error loading the profile:", error);
         }
       }
     };
@@ -65,11 +65,11 @@ export default function Profile() {
     console.log("Status: ", status);
 
     if (status === "authenticated" && session?.user?.id) {
-      loadProfile(); // Appelle la fonction pour charger le profil
+      loadProfile(); // Call the function to load the profile
     }
   }, [status, session]);
 
-  // Si le profil n'est pas encore chargé
+  // If the profile is not loaded yet
   if (!profile) {
     return <div>Chargement du profil...</div>;
   }
@@ -78,7 +78,7 @@ export default function Profile() {
     <div>
       <ToastContainer />
       <ProfilePage profile={profile} />{" "}
-      {/* Passe les données au composant ProfilePage */}
+      {/* Pass the data to the ProfilePage component */}
     </div>
   );
 }
