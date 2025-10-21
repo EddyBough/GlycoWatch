@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+gh label create "feature"     --color "1d76db" --description "Nouvelle fonctionnalité" || true
+gh label create "bug"         --color "d73a4a" --description "Un bug à corriger" || true
+gh label create "chore"       --color "cccccc" --description "Tâches techniques ou de maintenance" || true
+gh label create "docs"        --color "0075ca" --description "Documentation" || true
+gh label create "enhancement" --color "a2eeef" --description "Amélioration" || true
+echo "✅ Labels créés/mis à jour avec succès !"

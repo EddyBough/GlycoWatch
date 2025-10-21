@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ID="${1:-}"
+if [[ -z "$ID" ]]; then
+  gh issue list --limit 30
+  read -rp "ID de l'issue: " ID
+fi
+TITLE="$(gh issue view "$ID" --json title --jq .title)"
+slugify() { echo "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g'; }
+SLUG="$(slugify "$TITLE")"
+DEFAULT_BASE="$(git remote show origin | awk -F': ' '/HEAD branch/ {print $2}')"
+BASE="${DEFAULT_BASE:-main}"
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  echo "⚠️  Tu as des changements non commit. Commit ou stash avant de créer la branche."
+  exit 1
+fi
+git fetch origin "$BASE" >/dev/null 2>&1 || true
+BRANCH="issue-${ID}-${SLUG}"
+git checkout -b "$BRANCH" "origin/${BASE}" 2>/dev/null || git checkout -b "$BRANCH"
+echo "Branche créée et checkout: $BRANCH"
+echo "Astuce: mets 'refs #$ID' ou 'fixes #$ID' dans tes commits."
