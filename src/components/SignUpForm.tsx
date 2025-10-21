@@ -58,25 +58,25 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#00cba9]/10 to-white/50">
+    <div className="min-h-screen">
       <BackgroundDashboard />
       <ToastContainer />
 
       <div className="container relative mx-auto p-4 sm:p-6 lg:p-8">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl p-6 mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">
             Créer un compte
           </h1>
-          <p className="text-gray-600">
+          <p className="text-white/70">
             Remplissez le formulaire ci-dessous pour vous inscrire
           </p>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl p-6">
           <form onSubmit={handleSignUp} className="space-y-6">
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-white block">
                   Nom
                 </label>
                 <input
@@ -85,12 +85,12 @@ export default function SignUp() {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Votre nom"
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-white block">
                   Prénom
                 </label>
                 <input
@@ -99,12 +99,12 @@ export default function SignUp() {
                   onChange={(e) => setFirstname(e.target.value)}
                   placeholder="Votre prénom"
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-white block">
                   Email
                 </label>
                 <input
@@ -113,12 +113,12 @@ export default function SignUp() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="votre@email.com"
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-white block">
                   Mot de passe
                 </label>
                 <input
@@ -127,12 +127,12 @@ export default function SignUp() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-white block">
                   Date de naissance
                 </label>
                 <input
@@ -140,12 +140,12 @@ export default function SignUp() {
                   value={birthdate}
                   onChange={(e) => setBirthdate(e.target.value)}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">
+                <label className="text-sm font-medium text-white block">
                   Téléphone
                 </label>
                 <input
@@ -153,13 +153,13 @@ export default function SignUp() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="Votre numéro de téléphone"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 block">
+              <label className="text-sm font-medium text-white block">
                 Adresse
               </label>
               <input
@@ -167,14 +167,14 @@ export default function SignUp() {
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="Votre adresse complète"
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
               />
             </div>
 
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full bg-[#00cba9] hover:bg-[#00b598] text-white py-3 px-6 rounded-lg transition-colors duration-200 font-medium"
+                className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white py-3 px-6 rounded-lg transition-all duration-200 font-medium shadow-lg hover:shadow-emerald-500/50"
               >
                 Créer mon compte
               </button>
