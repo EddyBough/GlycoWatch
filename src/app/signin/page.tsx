@@ -8,10 +8,10 @@ import {
   ClientSafeProvider,
 } from "next-auth/react";
 import { BuiltInProviderType } from "next-auth/providers/index";
-import { WaveBackground } from "@/components/WaveBackground";
 import ErrorModal from "@/components/errorModal";
 import { ClipLoader } from "react-spinners";
 import Image from "next/image";
+import { BackgroundDashboard } from "@/components/BackgroundDashboard";
 
 export default function SignIn() {
   const [providers, setProviders] = useState<Record<
@@ -56,7 +56,7 @@ export default function SignIn() {
 
   return (
     <div className="relative min-h-screen isolate">
-      <WaveBackground />
+      <BackgroundDashboard />
       <div className="relative flex min-h-screen items-center justify-center p-4 -mt-[60px] lg:-mt-[50px]">
         <ErrorModal
           isOpen={showErrorModal}
@@ -64,9 +64,9 @@ export default function SignIn() {
           message="Les informations de connexion sont incorrectes. Réessayez avec vos identifiant et mot de passe"
           onConfirm={() => setShowErrorModal(false)}
         />
-        <div className="w-full max-w-md bg-white/95 backdrop-blur-sm shadow-xl rounded-lg p-8">
+        <div className="w-full max-w-md bg-white/10 backdrop-blur-md border border-white/20 shadow-xl rounded-lg p-8">
           <div className="text-center mb-8">
-            <h1 className="text-xl font-medium">Bienvenue</h1>
+            <h1 className="text-xl font-medium text-white">Bienvenue</h1>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -77,7 +77,7 @@ export default function SignIn() {
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                   required
                 />
               </div>
@@ -90,7 +90,7 @@ export default function SignIn() {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#00cba9] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                   required
                 />
               </div>
@@ -98,14 +98,14 @@ export default function SignIn() {
 
             <button
               type="submit"
-              className="w-full bg-[#00cba9] text-white py-3 px-4 rounded-lg hover:bg-[#9333EA] transition-colors duration-200 font-medium"
+              className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white py-3 px-4 rounded-lg transition-all duration-200 font-medium shadow-lg hover:shadow-emerald-500/50"
             >
               Se connecter
             </button>
             <span>
               <a
                 href="/forgot-password"
-                className="text-sm text-[#00cba9] hover:underline"
+                className="text-sm text-emerald-400 hover:text-emerald-300 hover:underline transition-colors"
               >
                 Mot de passe oublié ?
               </a>
@@ -116,10 +116,10 @@ export default function SignIn() {
             <>
               <div className="relative my-8">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
+                  <div className="w-full border-t border-white/20"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">
+                  <span className="px-2 bg-gray-950 text-white/70">
                     Se connecter avec
                   </span>
                 </div>
@@ -142,7 +142,7 @@ export default function SignIn() {
                       onClick={() =>
                         signIn(provider.id, { callbackUrl: "/dashboard" })
                       }
-                      className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+                      className="flex items-center justify-center px-4 py-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all duration-200 font-medium text-white"
                     >
                       {provider.name}
                       {iconSrc && (
