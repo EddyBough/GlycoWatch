@@ -24,7 +24,7 @@ const authOptions: AuthOptions = {
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
 
-    // Credentials Provider pour authentification classique
+    // Credentials Provider for classic authentication
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -32,12 +32,12 @@ const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // Vérification que les credentials ne sont pas undefined
+        // Vérification for avoid undefined credentials
         if (!credentials || !credentials.email || !credentials.password) {
-          throw new Error("Email ou mot de passe manquant");
+          throw new Error("Email or password missing");
         }
 
-        // Recherche de l'utilisateur dans la base de données via Prisma
+        // Search for the user in the database via Prisma
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
@@ -46,7 +46,7 @@ const authOptions: AuthOptions = {
           throw new Error("Aucun utilisateur trouvé");
         }
 
-        // Vérification du mot de passe
+        // Password verification
         if (!user.password) {
           throw new Error("Mot de passe non défini pour cet utilisateur");
         }
@@ -60,9 +60,9 @@ const authOptions: AuthOptions = {
           throw new Error("Mot de passe incorrect");
         }
 
-        // Retourner un objet utilisateur conforme à NextAuth
+        // Return an object user compliant with NextAuth
         return {
-          id: String(user.id), // NextAuth s'attend à une chaîne de caractères
+          id: String(user.id), // NextAuth expects a string
           name: user.name,
           email: user.email,
           image: user.image,
@@ -72,19 +72,21 @@ const authOptions: AuthOptions = {
     }),
   ],
 
-  adapter: PrismaAdapter(prisma), // Utilisation de Prisma avec NextAuth
+  adapter: PrismaAdapter(prisma), // Use of Prisma with NextAuth
 
   secret: process.env.NEXTAUTH_SECRET,
 
   session: {
-    strategy: "jwt" as SessionStrategy, // Utilisation de JWT pour les sessions
+    strategy: "jwt" as SessionStrategy, // Use of JWT for sessions
+    maxAge: 7 * 24 * 60 * 60, // 7 jours
+    updateAge: 24 * 60 * 60, // 24 hours to refresh the session
   },
 
   callbacks: {
     async session({ session, token }) {
-      const userId = parseInt(token.sub || "", 10); // Convertir l'ID en entier
+      const userId = parseInt(token.sub || "", 10); // Convert the ID to an integer
       if (session.user) {
-        session.user.id = userId; // Associer l'ID utilisateur à la session
+        session.user.id = userId; // Associate the user ID to the session
         session.user.firstname = token.firstname || null;
       }
       return session;
@@ -92,18 +94,18 @@ const authOptions: AuthOptions = {
 
     async jwt({ token, user }) {
       if (user) {
-        token.sub = user.id; // Lier l'utilisateur au token JWT
+        token.sub = user.id; // Link the user to the JWT token
         token.firstname = user.firstname || null;
       }
       return token;
     },
 
     async redirect({ url, baseUrl }) {
-      // Redirection après authentification
+      // Redirection after authentication
       if (url.startsWith(baseUrl)) {
-        return url; // Rediriger vers la page d'origine
+        return url; // Redirect to the original page
       }
-      return "/dashboard"; // Rediriger par défaut vers /dashboard
+      return "/dashboard"; // Redirect to /dashboard by default
     },
   },
 };
