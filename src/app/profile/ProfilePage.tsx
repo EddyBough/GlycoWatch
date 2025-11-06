@@ -73,7 +73,7 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
       await signOut(session?.user.id);
       toast.success("Compte supprimé avec succès");
       setTimeout(() => {
-        router.push("/home"); // Redirect after deletion
+        router.push("/"); // Redirect after deletion
       }, 2000);
     } catch (error) {
       toast.error("Erreur lors de la suppression du compte");

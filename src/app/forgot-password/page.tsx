@@ -40,10 +40,7 @@ export default function ForgotPassword() {
             </button>
 
             <div className="text-center mt-4">
-              <a
-                href="/home"
-                className="text-sm text-[#00cba9] hover:underline"
-              >
+              <a href="/" className="text-sm text-[#00cba9] hover:underline">
                 Retour à la connexion
               </a>
             </div>

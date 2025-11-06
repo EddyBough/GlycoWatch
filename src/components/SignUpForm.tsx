@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BackgroundDashboard } from "@/components/BackgroundDashboard";
+import { signIn } from "next-auth/react";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -39,10 +40,31 @@ export default function SignUp() {
       const data = await res.json();
 
       if (res.ok) {
-        toast.success("Inscription réussie ! Redirection...");
-        setTimeout(() => router.push("/dashboard"), 3000);
+        toast.success("Inscription réussie ! Connexion en cours...");
+
+        // Connect automatically the user
+        const result = await signIn("credentials", {
+          redirect: false,
+          email,
+          password,
+        });
+
+        if (result?.ok) {
+          // Redirection to the dashboard after successful connection
+          setTimeout(() => {
+            router.push("/dashboard");
+          }, 1000);
+        } else {
+          // If the connection fails, redirect to signin
+          toast.error(
+            "Compte créé mais connexion échouée. Veuillez vous connecter."
+          );
+          setTimeout(() => {
+            router.push("/signin");
+          }, 2000);
+        }
       } else {
-        // Affichage des erreurs spécifiques en utilisant des toasts
+        // Display specific errors using toasts
         if (data.errors) {
           Object.keys(data.errors).forEach((key) => {
             toast.error(data.errors[key]);

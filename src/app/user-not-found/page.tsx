@@ -24,7 +24,7 @@ export default function UserNotFound() {
           </div>
 
           <div className="text-center  mt-4">
-            <a href="/home" className="text-sm text-purple-800 hover:underline">
+            <a href="/" className="text-sm text-purple-800 hover:underline">
               Retour à l&apos;accueil
             </a>
           </div>
