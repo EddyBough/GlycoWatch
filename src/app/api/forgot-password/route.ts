@@ -60,6 +60,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.redirect(`${appUrl}/email-sent-success`, 303);
   } catch (error) {
-    return NextResponse.redirect(`${appUrl}/home`, 303);
+    return NextResponse.redirect(`${appUrl}/`, 303);
   }
 }

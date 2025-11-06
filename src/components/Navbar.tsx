@@ -32,7 +32,7 @@ export const Navbar = () => {
     signOut({ redirect: false }).then(() => {
       toast.success("Déconnexion réussie");
       setTimeout(() => {
-        router.push("/home");
+        router.push("/");
         handleLinkClick();
       }, 2000);
     });
