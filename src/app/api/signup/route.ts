@@ -80,7 +80,6 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Erreur lors de la création de l'utilisateur", error);
     return NextResponse.json(
       { message: "Erreur lors de la création de l'utilisateur" },
       { status: 500 }

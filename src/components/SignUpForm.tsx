@@ -74,7 +74,6 @@ export default function SignUp() {
         }
       }
     } catch (error) {
-      console.error("Erreur lors de la requête : ", error);
       toast.error("Erreur lors de la requête.");
     }
   };

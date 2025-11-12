@@ -32,8 +32,7 @@ export async function sendEmail(to: string, firstname: string) {
     };
 
     await sgMail.send(msg);
-    console.log("E-mail envoyé avec succès");
   } catch (error) {
-    console.error("Erreur lors de l'envoi de l'e-mail", error);
+    throw new Error("Erreur lors de l'envoi de l'e-mail.");
   }
 }
