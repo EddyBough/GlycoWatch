@@ -19,6 +19,7 @@ import MeasurementChart from "@/components/MeasurementChart";
 import ModificationModal from "@/components/ModificationModal";
 import ConfirmationModal from "@/components/confirmationModal";
 import ChatbotComponent from "@/components/Chatbot/ChatbotComponent";
+import { toast } from "react-toastify";
 
 interface Measurement {
   id: number;
@@ -52,7 +53,7 @@ const Dashboard = () => {
           const data = await getMeasurements(session.user.id);
           setMeasurements(Array.isArray(data) ? data : []);
         } catch (error) {
-          console.error("Erreur lors de la récupération des mesures :", error);
+          toast.error("Erreur lors de la récupération des mesures");
         }
       }
     };
@@ -66,7 +67,7 @@ const Dashboard = () => {
     e.preventDefault();
 
     if (!glycemyLevel || isNaN(parseFloat(glycemyLevel))) {
-      alert("Veuillez entrer une valeur valide pour le taux de glycémie");
+      toast.error("Veuillez entrer une valeur valide pour le taux de glycémie");
       return;
     }
 
@@ -74,7 +75,7 @@ const Dashboard = () => {
     const insulinDoseFloat = insulinDose ? parseFloat(insulinDose) : null;
 
     if (!selectedDate) {
-      alert("Veuillez sélectionner une date");
+      toast.error("Veuillez sélectionner une date");
       return;
     }
 
@@ -102,7 +103,7 @@ const Dashboard = () => {
         setInsulinDose("");
       }
     } catch (error) {
-      console.error("Erreur lors de l'ajout de la mesure :", error);
+      toast.error("Erreur lors de l'ajout de la mesure");
     }
   };
 

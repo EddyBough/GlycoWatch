@@ -41,7 +41,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.redirect(`${appUrl}/password-updated-success`, 303);
   } catch (error) {
-    console.error("Erreur :", error);
     return NextResponse.redirect(`${appUrl}/password-update-failed`, 303);
   }
 }

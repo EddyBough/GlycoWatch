@@ -53,16 +53,13 @@ export default function Profile() {
               firstname: data.user?.firstname ?? "", // Ensure we have a string
             });
           } else {
-            console.error("No profile data found.");
+            toast.error("Aucun profil trouvé");
           }
         } catch (error) {
-          console.error("Error loading the profile:", error);
+          toast.error("Erreur lors de la récupération du profil");
         }
       }
     };
-
-    console.log("Session: ", session);
-    console.log("Status: ", status);
 
     if (status === "authenticated" && session?.user?.id) {
       loadProfile(); // Call the function to load the profile
