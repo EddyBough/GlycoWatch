@@ -119,9 +119,7 @@ export default function SignIn() {
                   <div className="w-full border-t border-white/20"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-gray-950 text-white/70">
-                    Se connecter avec
-                  </span>
+                  <span className="px-2 text-white/70">Se connecter avec</span>
                 </div>
               </div>
 

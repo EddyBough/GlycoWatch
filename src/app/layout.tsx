@@ -11,19 +11,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
+        {/* Favicon principal */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <link
-          rel="apple-touch-icon"
-          type="image/x-icon"
-          href="/apple-touch-icon.png"
-          sizes="180x180"
+          rel="icon"
+          href="/favicon-16x16.png"
+          sizes="16x16"
+          type="image/png"
         />
         <link
           rel="icon"
-          href="/android-chrome-512x512.png"
-          sizes="512x512"
+          href="/favicon-32x32.png"
+          sizes="32x32"
           type="image/png"
+        />
+        <link
+          rel="apple-touch-icon"
+          href="/apple-touch-icon.png"
+          sizes="180x180"
         />
         <link
           rel="icon"
@@ -33,10 +40,12 @@ export default function RootLayout({
         />
         <link
           rel="icon"
-          href="/favicon-32x32.png"
-          sizes="32x32"
+          href="/android-chrome-512x512.png"
+          sizes="512x512"
           type="image/png"
         />
+        {/* Web App Manifest */}
+        <link rel="manifest" href="/site.webmanifest" />
         {/* Meta tags SEO */}
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
