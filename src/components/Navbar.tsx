@@ -42,27 +42,16 @@ export const Navbar = () => {
     <header className="relative z-50 w-full">
       <ToastContainer />
       <nav className="flex items-center justify-between max-w-7xl mx-auto px-6 py-5">
-        {/* Logo - Sur mobile: élément séparé, sur desktop: groupé avec texte */}
-        <Link
-          href="/"
-          className="flex-shrink-0 md:flex md:items-center md:gap-3"
-        >
+        {/* Logo */}
+        <Link href="/" className="flex-shrink-0">
           <Image
-            src="/image/glycowatch-logo.png"
+            src="/image/logo.png"
             alt="GlycoWatch Logo"
             width={220}
             height={50}
-            className="h-16 md:h-14 lg:h-24 w-auto"
+            className="h-32 md:h-14 lg:h-36 w-auto"
           />
-          <span className="hidden md:inline text-2xl md:text-3xl font-bold text-white">
-            GlycoWatch
-          </span>
         </Link>
-
-        {/* Texte GlycoWatch - Visible uniquement sur mobile comme élément du milieu */}
-        <span className="md:hidden text-2xl font-bold text-white">
-          GlycoWatch
-        </span>
 
         {/* Desktop Menu - Centre */}
         <ul className="hidden lg:flex items-center gap-8">

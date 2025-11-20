@@ -1,14 +1,26 @@
 import Image from "next/image";
-import { Activity, TrendingUp, Shield, Zap, Clock, Globe } from "lucide-react";
+import {
+  Activity,
+  TrendingUp,
+  Shield,
+  Zap,
+  Bot,
+  Globe,
+  Star,
+} from "lucide-react";
 
 export function PresentationPartOne() {
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center text-center px-4 py-20 max-w-7xl mx-auto">
+    <section className="min-h-screen flex flex-col items-center justify-center text-center px-4 pt-8 pb-20 md:py-20 max-w-7xl mx-auto">
       {/* Badge social proof */}
-      <div className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-5 py-2.5 mb-8 hover:bg-white/10 transition-all">
-        <span className="text-sm text-white font-medium">
+      <div className="relative inline-flex items-center gap-3 bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-emerald-500/10 backdrop-blur-md border border-emerald-400/30 rounded-full px-6 py-3 mb-8 hover:from-emerald-500/20 hover:via-cyan-500/20 hover:to-emerald-500/20 hover:border-emerald-400/50 hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-300 group">
+        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400">
+          <Star className="w-4 h-4 text-white fill-white" />
+        </div>
+        <span className="text-sm md:text-base text-white font-semibold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
           Approuvé par +50 diabétiques
         </span>
+        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-400/0 via-cyan-400/5 to-emerald-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
       {/* Titre principal */}
@@ -124,12 +136,12 @@ export function PresentationPartOne() {
 
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/5 border border-white/10 mb-3">
-            <Clock className="w-7 h-7 text-cyan-400" />
+            <Bot className="w-7 h-7 text-cyan-400" />
           </div>
-          <h4 className="text-white font-semibold mb-2">
-            Rappels personnalisés
-          </h4>
-          <p className="text-sm text-white/60">Ne manquez plus aucune mesure</p>
+          <h4 className="text-white font-semibold mb-2">GlycoBot</h4>
+          <p className="text-sm text-white/60">
+            Assistant intelligent disponible 24/7
+          </p>
         </div>
 
         <div className="text-center">
