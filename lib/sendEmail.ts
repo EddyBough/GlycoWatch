@@ -1,18 +1,13 @@
-import sgMail from "@sendgrid/mail";
+import { Resend } from "resend";
 
-// Configure l'API Key SendGrid
-sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendEmail(to: string, firstname: string) {
   try {
-    const msg = {
+    await resend.emails.send({
+      from: "GlycoWatch® <noreply@glycowatch.fr>",
       to,
-      from: {
-        email: "ebdeveloper@outlook.fr", // Remplace par ton e-mail vérifié
-        name: "GlycoWatch®", // Nom de l'expéditeur
-      },
       subject: "Bienvenue sur GlycoWatch",
-      text: `Bonjour ${firstname}, bienvenue sur GlycoWatch®! Nous sommes ravis de vous avoir parmi nous.`,
       html: `
       <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
         <div style="background-color: #00cba9; padding: 20px; text-align: center; color: white;">
@@ -29,9 +24,7 @@ export async function sendEmail(to: string, firstname: string) {
         </div>
       </div>
     `,
-    };
-
-    await sgMail.send(msg);
+    });
   } catch (error) {
     throw new Error("Erreur lors de l'envoi de l'e-mail.");
   }

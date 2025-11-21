@@ -1,7 +1,7 @@
-import sgMail from "@sendgrid/mail";
+import { Resend } from "resend";
 import { encode } from "next-auth/jwt"; // Fonction NextAuth pour encoder le token JWT
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendResetEmail(email: string) {
   const appUrl = process.env.APP_URL || "http://localhost:3000";
@@ -15,12 +15,9 @@ export async function sendResetEmail(email: string) {
 
     const resetLink = `${appUrl}/reset-password?token=${resetToken}`;
 
-    const msg = {
+    await resend.emails.send({
+      from: "GlycoWatch® <noreply@glycowatch.fr>",
       to: email,
-      from: {
-        email: "ebdeveloper@outlook.fr",
-        name: "GlycoWatch®",
-      },
       subject: "Réinitialisation de votre mot de passe",
       html: `
       <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
@@ -39,9 +36,7 @@ export async function sendResetEmail(email: string) {
         </div>
       </div>
     `,
-    };
-
-    await sgMail.send(msg);
+    });
   } catch (error) {
     throw new Error("Erreur lors de l'envoi de l'e-mail.");
   }
