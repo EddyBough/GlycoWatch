@@ -33,8 +33,8 @@ export function PresentationPartOne() {
 
       {/* Sous-titre */}
       <p className="text-xl md:text-2xl text-white/70 max-w-3xl mb-3 leading-relaxed">
-        L&apos;application de suivi glycémique la plus intuitive pour
-        diabétiques Type 1, Type 2 et gestationnel
+        L&apos;application gratuite de suivi glycémique la plus complète du web
+        pour diabétiques
       </p>
       <p className="text-base md:text-lg text-white/50 max-w-2xl mb-12">
         Suivez, analysez et partagez vos données en toute sécurité
