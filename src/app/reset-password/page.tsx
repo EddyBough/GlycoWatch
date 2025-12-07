@@ -1,11 +1,13 @@
+import Link from "next/link";
 import { WaveBackground } from "@/components/WaveBackground";
 
-export default function ResetPassword({
+export default async function ResetPassword({
   searchParams,
 }: {
-  searchParams: { token?: string };
+  searchParams: Promise<{ token?: string }>;
 }) {
-  const token = searchParams?.token;
+  const params = await searchParams;
+  const token = params?.token;
 
   return (
     <div className="relative min-h-screen isolate">
@@ -46,9 +48,9 @@ export default function ResetPassword({
           </form>
 
           <div className="text-center mt-4">
-            <a href="/" className="text-sm text-[#00cba9] hover:underline">
+            <Link href="/" className="text-sm text-[#00cba9] hover:underline">
               Retour à la connexion
-            </a>
+            </Link>
           </div>
         </div>
       </div>

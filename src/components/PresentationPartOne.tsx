@@ -5,8 +5,8 @@ import {
   Shield,
   Zap,
   Bot,
-  Globe,
   Star,
+  BarChart,
 } from "lucide-react";
 
 export function PresentationPartOne() {
@@ -18,7 +18,7 @@ export function PresentationPartOne() {
           <Star className="w-4 h-4 text-white fill-white" />
         </div>
         <span className="text-sm md:text-base text-white font-semibold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-          Approuvé par +50 diabétiques
+          Approuvé par +150 diabétiques
         </span>
         <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-400/0 via-cyan-400/5 to-emerald-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
@@ -146,11 +146,13 @@ export function PresentationPartOne() {
 
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/5 border border-white/10 mb-3">
-            <Globe className="w-7 h-7 text-purple-400" />
+            <BarChart className="w-7 h-7 text-purple-400" />
           </div>
-          <h4 className="text-white font-semibold mb-2">Multi-appareils</h4>
+          <h4 className="text-white font-semibold mb-2">
+            Graphiques détaillés
+          </h4>
           <p className="text-sm text-white/60">
-            Synchronisez sur tous vos appareils
+            Visualisez vos tendances glycémiques sur plusieurs périodes
           </p>
         </div>
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { WaveBackground } from "@/components/WaveBackground";
 
 export default function ForgotPassword() {
@@ -40,9 +41,9 @@ export default function ForgotPassword() {
             </button>
 
             <div className="text-center mt-4">
-              <a href="/" className="text-sm text-[#00cba9] hover:underline">
+              <Link href="/" className="text-sm text-[#00cba9] hover:underline">
                 Retour à la connexion
-              </a>
+              </Link>
             </div>
           </form>
         </div>
