@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { WaveBackground } from "@/components/WaveBackground";
 
 export default function UserNotFound() {
@@ -24,9 +25,9 @@ export default function UserNotFound() {
           </div>
 
           <div className="text-center  mt-4">
-            <a href="/" className="text-sm text-purple-800 hover:underline">
+            <Link href="/" className="text-sm text-purple-800 hover:underline">
               Retour à l&apos;accueil
-            </a>
+            </Link>
           </div>
         </div>
       </div>
