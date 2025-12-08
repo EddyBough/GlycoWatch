@@ -2,17 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: "Sansation-regular";
-  src: url("/font/Sansation_Regular.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-
-body {
-  font-family: "Sansation-regular", sans-serif;
-}
-
 /* Styles pour react-calendar - design sombre glassmorphisme */
 .react-calendar {
   background: rgba(255, 255, 255, 0.05) !important;

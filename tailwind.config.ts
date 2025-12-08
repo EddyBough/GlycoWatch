@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-urbanist)", "sans-serif"],
+      },
       colors: {
         customCyan: "#00cba9",
       },
