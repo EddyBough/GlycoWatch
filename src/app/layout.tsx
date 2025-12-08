@@ -1,9 +1,16 @@
 "use client";
 
+import { Urbanist } from "next/font/google";
 import "./globals.scss";
 import Navbar from "@/components/Navbar";
 import { SessionProvider } from "next-auth/react";
 import { Footer } from "@/components/Footer";
+
+const urbanist = Urbanist({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-urbanist",
+});
 
 export default function RootLayout({
   children,
@@ -11,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    <html lang="fr" className={urbanist.variable}>
       <head>
         {/* Favicon principal */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -98,7 +105,7 @@ export default function RootLayout({
 
         <title>GlycoWatch - Suivi de glycémie et d&apos;insuline</title>
       </head>
-      <body>
+      <body className={urbanist.className}>
         <SessionProvider>
           <Navbar />
           {children}
