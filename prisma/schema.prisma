@@ -19,6 +19,8 @@ model User {
   sessions      Session[]
   profile       Profile? // relation vers le profil
   measurements  Measurement[]
+  subscription  Subscription? // relation vers l'abonnement
+  aiUsage       AiUsage? // relation vers l'utilisation IA
 }
 
 model Account {
@@ -75,4 +77,37 @@ model Measurement {
   insulinDose  Float?
   date         DateTime @default(now())
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Enum pour les plans d'abonnement
+enum Plan {
+  FREE // Plan gratuit (pas d'accès IA - 0 requêtes/jour)
+  IA_PLUS // Plan payant (50 requêtes/jour)
+}
+
+// Modèle pour les abonnements utilisateur
+model Subscription {
+  id               Int      @id @default(autoincrement())
+  userId           Int      @unique
+  plan             Plan     @default(FREE)
+  stripeCustomerId String?  @map("stripe_customer_id")
+  stripeSubId      String?  @map("stripe_sub_id")
+  status           String? // "active", "canceled", "trialing", etc.
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Modèle pour l'utilisation IA (quotas)
+model AiUsage {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @unique
+  requestsToday Int       @default(0) @map("requests_today")
+  dailyLimit    Int       @default(0) @map("daily_limit") // FREE: 0 (pas d'accès), IA_PLUS: 50
+  lastReset     DateTime? @map("last_reset")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
