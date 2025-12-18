@@ -1,22 +1,25 @@
 // src/next-auth.d.ts
 import NextAuth from "next-auth";
+import { DefaultSession } from "next-auth";
 
-// Étendre les types de NextAuth pour ajouter le champ firstname
 declare module "next-auth" {
   interface Session {
     user: {
-      id: string;
-      firstname?: string | null; // Ajout du champ firstname
+      id: number;
+      firstname?: string | null;
     } & DefaultSession["user"];
   }
 
   interface User {
     id: string;
-    firstname?: string | null; // Ajout du champ firstname à l'utilisateur
+    firstname?: string | null;
   }
+}
 
+// ⚠️ IMPORTANT : JWT est dans next-auth/jwt
+declare module "next-auth/jwt" {
   interface JWT {
     sub: string;
-    firstname?: string | null; // Ajout du champ firstname au JWT
+    firstname?: string | null;
   }
 }

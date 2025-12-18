@@ -70,7 +70,7 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
   const handleDeleteAccount = async () => {
     try {
       await deleteUser(profile.userId); // Call the function directly on the server
-      await signOut(session?.user.id);
+      await signOut();
       toast.success("Compte supprimé avec succès");
       setTimeout(() => {
         router.push("/"); // Redirect after deletion
