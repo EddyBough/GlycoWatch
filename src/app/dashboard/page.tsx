@@ -89,9 +89,14 @@ const Dashboard = () => {
       0
     );
 
+    if (!session?.user?.id) {
+      toast.error("Utilisateur non authentifié");
+      return;
+    }
+
     try {
       const newMeasurement = await addMeasurement(
-        session?.user?.id,
+        session.user.id,
         glycemyLevelFloat,
         insulinDoseFloat,
         dateWithTime

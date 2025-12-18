@@ -9,7 +9,7 @@ export async function sendResetEmail(email: string) {
   try {
     const resetToken = await encode({
       secret: process.env.NEXTAUTH_SECRET || "",
-      token: { email },
+      token: { email, sub: email }, // sub est requis par le type JWT
       maxAge: 60 * 60, // Expire dans 1 heure
     });
 
