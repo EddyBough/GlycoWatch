@@ -7,6 +7,7 @@ declare module "next-auth" {
     user: {
       id: number;
       firstname?: string | null;
+      plan: "FREE" | "IA_PLUS";
     } & DefaultSession["user"];
   }
 
@@ -21,5 +22,6 @@ declare module "next-auth/jwt" {
   interface JWT {
     sub: string;
     firstname?: string | null;
+    plan?: "FREE" | "IA_PLUS";
   }
 }

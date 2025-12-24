@@ -75,6 +75,16 @@ export const Navbar = () => {
               </Link>
             </li>
           )}
+          {session && (
+            <li>
+              <Link
+                href="/pricing"
+                className="text-sm text-white/70 hover:text-white transition-colors"
+              >
+                Tarifs
+              </Link>
+            </li>
+          )}
           <li>
             <Link
               href="/privacy"
@@ -173,6 +183,15 @@ export const Navbar = () => {
                         className="block px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all"
                       >
                         Profil
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/pricing"
+                        onClick={handleLinkClick}
+                        className="block px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                      >
+                        Tarifs
                       </Link>
                     </li>
                   </>

@@ -76,6 +76,7 @@ export const authOptions: AuthOptions = {
       if (session.user) {
         session.user.id = Number(token.sub);
         session.user.firstname = token.firstname ?? null;
+        session.user.plan = token.plan ?? "FREE";
       }
       return session;
     },
@@ -84,6 +85,15 @@ export const authOptions: AuthOptions = {
       if (user) {
         token.sub = user.id;
         token.firstname = user.firstname ?? null;
+
+        // Récupérer le plan de l'utilisateur
+        const userId = Number(user.id);
+        if (!isNaN(userId)) {
+          const subscription = await prisma.subscription.findUnique({
+            where: { userId },
+          });
+          token.plan = subscription?.plan || "FREE";
+        }
       }
       return token;
     },

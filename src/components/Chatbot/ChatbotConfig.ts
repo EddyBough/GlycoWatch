@@ -4,7 +4,7 @@ const ChatbotConfig = {
   botName: "GlycoBot",
   initialMessages: [
     createChatBotMessage(
-      `Bonjour ! Je suis GlycoBot. Entrez votre type de diabète (1, 2, 3 ou diabète gestationnel), je vous renseignerai si elle est basse, normale ou élevée. Mais consultez votre médecin quoi qu'il arrive.`,
+      `Bonjour ! Je suis GlycoBot, votre assistant médical IA spécialisé dans le diabète. Posez-moi vos questions sur la glycémie, le diabète, ou votre suivi. Je vous rappelle que mes conseils sont généraux et qu'il est important de consulter un médecin pour tout conseil médical personnalisé.`,
       {}
     ),
   ],

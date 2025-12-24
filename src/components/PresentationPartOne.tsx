@@ -88,7 +88,7 @@ export function PresentationPartOne() {
               Analyse intelligente
             </h3>
             <p className="text-sm text-white/60">
-              Identifiez vos patterns et optimisez votre routine
+              Identifiez vos tendances et optimisez votre routine
             </p>
           </div>
         </div>
@@ -140,7 +140,7 @@ export function PresentationPartOne() {
           </div>
           <h4 className="text-white font-semibold mb-2">GlycoBot</h4>
           <p className="text-sm text-white/60">
-            Assistant intelligent disponible 24/7
+            Assistant IA intelligent disponible 24/7
           </p>
         </div>
 

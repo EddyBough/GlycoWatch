@@ -129,9 +129,9 @@ export default function SignIn() {
 
                   const iconSrc =
                     provider.id === "google"
-                      ? "/image/icon-google.svg"
+                      ? "/image/google-logo.png"
                       : provider.id === "github"
-                      ? "/image/icon-github.svg"
+                      ? "/image/icon-github.png"
                       : null;
 
                   return (
