@@ -20,6 +20,7 @@ import ModificationModal from "@/components/ModificationModal";
 import ConfirmationModal from "@/components/confirmationModal";
 import ChatbotComponent from "@/components/Chatbot/ChatbotComponent";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 interface Measurement {
   id: number;
@@ -179,6 +180,22 @@ const Dashboard = () => {
           <p className="text-white/70">
             Suivez vos mesures de glycémie quotidiennes
           </p>
+          <div className="flex items-center gap-3 mt-2">
+            <span className="text-white/60 text-sm">Plan:</span>
+            {session?.user?.plan && (
+              <Link href="/pricing">
+                <span
+                  className={`px-3 py-1 text-xs font-semibold rounded-full border cursor-pointer hover:opacity-80 transition-opacity ${
+                    session.user.plan === "IA_PLUS"
+                      ? "bg-[#00cba9]/20 text-[#00cba9] border-[#00cba9]/40 shadow-sm"
+                      : "bg-white/10 text-white/80 border-white/20"
+                  }`}
+                >
+                  {session.user.plan === "IA_PLUS" ? "IA+" : "Gratuit"}
+                </span>
+              </Link>
+            )}
+          </div>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-2">
@@ -300,7 +317,7 @@ const Dashboard = () => {
           )}
 
           <div className="fixed bottom-4 right-4 w-96 shadow-lg z-10">
-            <ChatbotComponent />
+            <ChatbotComponent userPlan={session?.user?.plan} />
           </div>
         </div>
 

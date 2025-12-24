@@ -5,11 +5,27 @@ import config from "./ChatbotConfig";
 import MessageParser from "./MessageParser";
 import ActionProvider from "./ActionProvider";
 import { BotIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
-const ChatbotComponent = () => {
+interface ChatbotComponentProps {
+  userPlan?: "FREE" | "IA_PLUS";
+}
+
+const ChatbotComponent = ({ userPlan = "FREE" }: ChatbotComponentProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const toggleChatbot = () => {
+    // Vérifier le plan avant d'ouvrir
+    if (userPlan !== "IA_PLUS") {
+      toast.info("L'accès au chatbot IA nécessite le plan IA+. Découvrez nos tarifs !", {
+        onClick: () => router.push("/pricing"),
+        style: { cursor: "pointer" },
+      });
+      router.push("/pricing");
+      return;
+    }
     setIsOpen((prev) => !prev);
   };
 
