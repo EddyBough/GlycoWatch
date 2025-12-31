@@ -97,9 +97,11 @@ const PricingPage = () => {
         "Accès à l'assistant IA GlycoBot pour des conseils personnalisés",
       features: [
         "Tout du plan Gratuit",
-        "50 requêtes IA spécialisée par jour",
+        "Jusqu'à 50 analyses IA personnalisées par jour",
         "Conseils personnalisés sur votre diabète",
-        "Analyse de vos données par l'IA",
+        "Prise en compte de votre type de diabète (T1, T2, LADA…)",
+        "Analyse IA de vos données réelles",
+        "Recommandations personnalisées pour votre diabète",
         "Support prioritaire",
       ],
       cta: "S'abonner",
