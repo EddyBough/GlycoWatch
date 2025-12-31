@@ -3,25 +3,87 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { consumeAiRequest } from "../../../../../lib/ai/usage";
 import OpenAI from "openai";
+import prisma from "../../../../../lib/prisma";
+
+/**
+ * Construit le contexte glycémique pour l'IA (7 derniers jours)
+ */
+function buildMeasurementsContext(
+  measurements: {
+    glycemyLevel: number;
+    insulinDose: number | null;
+    date: Date;
+  }[]
+): string {
+  if (!measurements.length) {
+    return "\n\n[GLYCÉMIE]\nAucune mesure enregistrée sur les 7 derniers jours.";
+  }
+
+  const formatted = measurements
+    .map((m) => {
+      const date = new Date(m.date).toLocaleDateString("fr-FR");
+      const insulin = m.insulinDose ? ` | Insuline ${m.insulinDose}U` : "";
+      return `${date} | ${m.glycemyLevel} g/L${insulin}`;
+    })
+    .join("\n");
+
+  return `\n\n[GLYCÉMIE - 7 DERNIERS JOURS]\n${formatted}`;
+}
+
+/**
+ * Construit le contexte médical du patient pour l'IA (type de diabète, médicaments)
+ */
+function buildProfileContext(
+  profile: {
+    diabetesType: string | null;
+    medications: string | null;
+  } | null
+): string {
+  if (!profile) {
+    return "\n\n[PROFIL]\nAucune information médicale renseignée.";
+  }
+
+  const diabetesTypeMap: Record<string, string> = {
+    TYPE_1: "Type 1 (insulinodépendant)",
+    TYPE_2: "Type 2",
+    GESTATIONAL: "Diabète gestationnel",
+    LADA: "LADA (diabète auto-immun latent de l’adulte)",
+    OTHER: "Autre type de diabète",
+  };
+
+  let context = "\n\n[PROFIL]";
+
+  if (profile.diabetesType) {
+    const label = diabetesTypeMap[profile.diabetesType] ?? profile.diabetesType;
+    context += `\nType de diabète : ${label}`;
+
+    //Orientation forte pour l'IA sans coût significatif
+    if (profile.diabetesType === "TYPE_1") {
+      context +=
+        "\n Patient insulinodépendant : vigilance accrue sur les variations glycémiques.";
+    }
+  } else {
+    context += "\nType de diabète : Non renseigné";
+  }
+
+  if (profile.medications) {
+    context += `\nMédicaments : ${profile.medications}`;
+  }
+
+  return context;
+}
 
 export async function POST(req: NextRequest) {
   try {
-    // 0. Vérifier que OPENAI_API_KEY est configurée
     if (!process.env.OPENAI_API_KEY) {
       throw new Error("OPENAI_API_KEY manquante");
     }
 
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-
-    // 1. Vérifier l'authentification
     const session = await getServerSession(authOptions);
     if (!session?.user) {
       return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
     }
 
-    // Type assertion nécessaire car NextAuth types sont complexes
     const userId = session.user.id;
     if (!userId || isNaN(userId)) {
       return NextResponse.json(
@@ -30,7 +92,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. Récupérer le message utilisateur
     const body = await req.json();
     const { message } = body;
 
@@ -38,18 +99,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Message requis" }, { status: 400 });
     }
 
-    // 3. Consommer un crédit IA (atomique - vérifie ET débite)
+    //Débit quota AVANT appel OpenAI
     let quotaInfo;
     try {
       quotaInfo = await consumeAiRequest(userId);
     } catch (error: any) {
-      // Log pour monitoring (utile en SaaS)
-      console.warn("AI quota error", {
-        userId,
-        error: error.message,
-      });
-
-      // Gérer les erreurs de quota
       if (error.message === "NO_AI_ACCESS") {
         return NextResponse.json(
           {
@@ -59,6 +113,7 @@ export async function POST(req: NextRequest) {
           { status: 403 }
         );
       }
+
       if (error.message === "AI_QUOTA_EXCEEDED") {
         return NextResponse.json(
           {
@@ -68,35 +123,71 @@ export async function POST(req: NextRequest) {
           { status: 429 }
         );
       }
-      // Erreur inattendue
+
       throw error;
     }
 
-    // 4. Appeler OpenAI (seulement si crédit débité avec succès)
+    //Profil utilisateur (type-safe)
+    const profile = await prisma.profile.findUnique({
+      where: { userId },
+      select: {
+        diabetesType: true,
+        medications: true,
+      },
+    });
+
+    //Mesures des 7 derniers jours
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const measurements = await prisma.measurement.findMany({
+      where: {
+        userId,
+        date: { gte: sevenDaysAgo },
+      },
+      orderBy: { date: "desc" },
+      select: {
+        glycemyLevel: true,
+        insulinDose: true,
+        date: true,
+      },
+      take: 50,
+    });
+
+    const profileContext = buildProfileContext(profile);
+    const measurementsContext = buildMeasurementsContext(measurements);
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
           content:
-            "Tu es GlycoBot, un assistant médical spécialisé dans le diabète. Tu fournis des conseils sur la glycémie et le diabète, tu fais des réponses courtes et concises au possible. Tu es professionnel, rassurant et si la question demande un conseil médical personnalisé, donne le mais tu précises qu'il faut consulter un médecin pour tout conseil médical personnalisé. Si le patient te donne des données via son PDF de l'appli, interprête.",
+            "Tu es GlycoBot, un assistant médical spécialisé dans le diabète. " +
+            "Tu analyses les données du patient ci-dessous et fournis des conseils clairs, courts et concis " +
+            "Tu rappelles toujours que l'avis d'un professionnel de santé est indispensable pour toute décision médicale." +
+            profileContext +
+            measurementsContext,
         },
         {
           role: "user",
           content: message,
         },
       ],
-      max_tokens: 300, // Réponses courtes pour limiter les coûts
+      max_tokens: 400,
       temperature: 0.7,
     });
 
-    const aiResponse =
-      completion.choices[0]?.message?.content ||
+    const response =
+      completion.choices[0]?.message?.content ??
       "Désolé, je n'ai pas pu générer de réponse.";
 
-    // 5. Retourner la réponse avec les infos de quota
     return NextResponse.json({
-      response: aiResponse,
+      response,
       remaining: quotaInfo.remaining,
       dailyLimit: quotaInfo.dailyLimit,
     });

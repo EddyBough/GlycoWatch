@@ -1,11 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BackgroundDashboard } from "@/components/BackgroundDashboard";
-import { signIn } from "next-auth/react";
+import {
+  signIn,
+  getProviders,
+  LiteralUnion,
+  ClientSafeProvider,
+} from "next-auth/react";
+import { BuiltInProviderType } from "next-auth/providers/index";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -15,7 +23,19 @@ export default function SignUp() {
   const [birthdate, setBirthdate] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
+  const [providers, setProviders] = useState<Record<
+    LiteralUnion<BuiltInProviderType, string>,
+    ClientSafeProvider
+  > | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchProviders = async () => {
+      const providers = await getProviders();
+      setProviders(providers);
+    };
+    fetchProviders();
+  }, []);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,7 +109,7 @@ export default function SignUp() {
             Créer un compte
           </h1>
           <p className="text-white/70">
-            Remplissez le formulaire ci-dessous pour vous inscrire
+            Commencez votre suivi glycémique en quelques secondes
           </p>
         </div>
 
@@ -201,6 +221,69 @@ export default function SignUp() {
               </button>
             </div>
           </form>
+
+          {/* Séparateur et options OAuth */}
+          {providers &&
+            Object.values(providers).some((p) => p.id !== "credentials") && (
+              <>
+                <div className="relative my-8">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-white/20"></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 text-white/70">OU</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  {Object.values(providers).map((provider) => {
+                    if (provider.id === "credentials") return null;
+
+                    const iconSrc =
+                      provider.id === "google"
+                        ? "/image/google-logo.png"
+                        : provider.id === "github"
+                        ? "/image/icon-github.png"
+                        : null;
+
+                    return (
+                      <button
+                        key={provider.name}
+                        type="button"
+                        onClick={() =>
+                          signIn(provider.id, { callbackUrl: "/dashboard" })
+                        }
+                        className="flex items-center justify-center px-4 py-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all duration-200 font-medium text-white"
+                      >
+                        {iconSrc && (
+                          <Image
+                            src={iconSrc}
+                            alt={`${provider.name} Icon`}
+                            width={20}
+                            height={20}
+                            className="mr-2 w-5 h-5"
+                          />
+                        )}
+                        {provider.id === "google" ? "Google" : provider.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+          {/* Lien vers la page de connexion */}
+          <div className="mt-6 text-center">
+            <p className="text-white/70 text-sm">
+              Déjà un compte ?{" "}
+              <Link
+                href="/signin"
+                className="text-emerald-400 hover:text-emerald-300 hover:underline transition-colors font-medium"
+              >
+                Se connecter
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

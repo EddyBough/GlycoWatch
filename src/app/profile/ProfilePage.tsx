@@ -18,6 +18,7 @@ interface UserProfile {
   phone: string | null;
   medications: string | null;
   healthIssues: string | null;
+  diabetesType: string | null;
 }
 
 const ProfilePage = ({ profile }: { profile: UserProfile }) => {
@@ -32,9 +33,12 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
     phone: profile?.phone ?? "",
     medications: profile?.medications ?? "",
     healthIssues: profile?.healthIssues ?? "",
+    diabetesType: profile?.diabetesType ?? "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -187,6 +191,27 @@ const ProfilePage = ({ profile }: { profile: UserProfile }) => {
                 className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                 placeholder="Liste de vos médicaments"
               />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-white block">
+                Type de diabète
+              </label>
+              <select
+                name="diabetesType"
+                value={formData.diabetesType}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all [&>option]:bg-gray-800 [&>option]:text-white"
+              >
+                <option value="">Sélectionnez votre type de diabète</option>
+                <option value="TYPE_1">Type 1 (insulinodépendant)</option>
+                <option value="TYPE_2">Type 2</option>
+                <option value="GESTATIONAL">Diabète gestationnel</option>
+                <option value="LADA">
+                  LADA (diabète auto-immun latent de l&apos;adulte)
+                </option>
+                <option value="OTHER">Autre type de diabète</option>
+              </select>
             </div>
 
             <div className="space-y-2">
