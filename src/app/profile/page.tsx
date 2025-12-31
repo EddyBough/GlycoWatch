@@ -21,6 +21,7 @@ export default function Profile() {
     phone: string | null;
     medications: string | null;
     healthIssues: string | null;
+    diabetesType: string | null;
     name: string; // Add the name property
     firstname: string; // Add the firstname property
   }
@@ -49,6 +50,7 @@ export default function Profile() {
               phone: data.phone ?? null,
               medications: data.medications ?? null,
               healthIssues: data.healthIssues ?? null,
+              diabetesType: data.diabetesType ?? null,
               name: data.user?.name ?? "", // Ensure we have a string
               firstname: data.user?.firstname ?? "", // Ensure we have a string
             });

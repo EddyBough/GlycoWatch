@@ -2,20 +2,72 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BackgroundDashboard } from "@/components/BackgroundDashboard";
 import { Check, Zap, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 const PricingPage = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [loading, setLoading] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/signin");
     }
   }, [status, router]);
+
+  // Gérer les retours de Stripe Checkout
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("success") === "true") {
+      toast.success("Abonnement réussi ! Redirection en cours...");
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 2000);
+    }
+    if (params.get("canceled") === "true") {
+      toast.info("Paiement annulé");
+    }
+  }, [router]);
+
+  const handleSubscribe = async (plan: string) => {
+    if (plan !== "IA_PLUS") return;
+
+    setLoading(plan);
+    try {
+      const response = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ plan }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || "Erreur lors de la création de la session"
+        );
+      }
+
+      // Rediriger vers Stripe Checkout
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("URL de checkout manquante");
+      }
+    } catch (error: any) {
+      console.error("Erreur checkout:", error);
+      toast.error(
+        error.message || "Erreur lors de l'abonnement. Veuillez réessayer."
+      );
+      setLoading(null);
+    }
+  };
 
   const plans = [
     {
@@ -145,14 +197,25 @@ const PricingPage = () => {
 
                 {/* CTA Button */}
                 <button
+                  onClick={() => handleSubscribe(plan.plan)}
                   className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 ${
                     isCurrentPlan
                       ? "bg-white/10 text-white/60 border border-white/20 cursor-not-allowed"
+                      : plan.plan === "IA_PLUS"
+                      ? "bg-gradient-to-r from-[#00cba9] to-cyan-500 text-white hover:from-[#00b598] hover:to-cyan-600 shadow-lg shadow-[#00cba9]/30 hover:shadow-[#00cba9]/50 disabled:opacity-50 disabled:cursor-not-allowed"
                       : "bg-white/10 text-white/60 border border-white/20 cursor-not-allowed opacity-70"
                   }`}
-                  disabled={true}
+                  disabled={
+                    isCurrentPlan ||
+                    plan.plan !== "IA_PLUS" ||
+                    loading === plan.plan
+                  }
                 >
-                  {isCurrentPlan ? "Plan actuel" : "Bientôt disponible"}
+                  {loading === plan.plan
+                    ? "Chargement..."
+                    : isCurrentPlan
+                    ? "Plan actuel"
+                    : plan.cta}
                 </button>
               </div>
             );

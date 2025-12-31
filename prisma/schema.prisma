@@ -60,14 +60,15 @@ model VerificationToken {
 }
 
 model Profile {
-  id           Int       @id @default(autoincrement())
-  userId       Int       @unique
+  id           Int           @id @default(autoincrement())
+  userId       Int           @unique
   birthdate    DateTime?
   address      String?
   phone        String?
   medications  String?
   healthIssues String?
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  diabetesType DiabetesType?
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Measurement {
@@ -77,6 +78,15 @@ model Measurement {
   insulinDose  Float?
   date         DateTime @default(now())
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Enum pour les types de diabète
+enum DiabetesType {
+  TYPE_1
+  TYPE_2
+  GESTATIONAL
+  LADA
+  OTHER
 }
 
 // Enum pour les plans d'abonnement
