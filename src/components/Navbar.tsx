@@ -11,6 +11,7 @@ import Image from "next/image";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [loadingManage, setLoadingManage] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -36,6 +37,38 @@ export const Navbar = () => {
         handleLinkClick();
       }, 2000);
     });
+  };
+
+  const handleManageSubscription = async () => {
+    setLoadingManage(true);
+    try {
+      const response = await fetch("/api/stripe/portal", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Erreur lors de l'ouverture du portail");
+      }
+
+      // Rediriger vers Stripe Customer Portal
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("URL du portail manquante");
+      }
+    } catch (error: any) {
+      console.error("Erreur portail:", error);
+      toast.error(
+        error.message ||
+          "Erreur lors de l'ouverture du portail. Veuillez réessayer."
+      );
+      setLoadingManage(false);
+    }
   };
 
   return (
@@ -83,6 +116,17 @@ export const Navbar = () => {
               >
                 Tarifs
               </Link>
+            </li>
+          )}
+          {session && session.user?.plan === "IA_PLUS" && (
+            <li>
+              <button
+                onClick={handleManageSubscription}
+                disabled={loadingManage}
+                className="text-sm text-white/70 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loadingManage ? "Chargement..." : "Gérer mon abonnement"}
+              </button>
             </li>
           )}
           <li>
@@ -194,6 +238,22 @@ export const Navbar = () => {
                         Tarifs
                       </Link>
                     </li>
+                    {session.user?.plan === "IA_PLUS" && (
+                      <li>
+                        <button
+                          onClick={() => {
+                            handleManageSubscription();
+                            handleLinkClick();
+                          }}
+                          disabled={loadingManage}
+                          className="w-full text-left px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {loadingManage
+                            ? "Chargement..."
+                            : "Gérer mon abonnement"}
+                        </button>
+                      </li>
+                    )}
                   </>
                 )}
                 <li>
