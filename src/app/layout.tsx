@@ -5,6 +5,7 @@ import "./globals.scss";
 import Navbar from "@/components/Navbar";
 import { SessionProvider } from "next-auth/react";
 import { Footer } from "@/components/Footer";
+import { SentryUser } from "@/components/SentryUser";
 
 const urbanist = Urbanist({
   subsets: ["latin"],
@@ -107,6 +108,7 @@ export default function RootLayout({
       </head>
       <body className={urbanist.className}>
         <SessionProvider>
+          <SentryUser />
           <Navbar />
           {children}
         </SessionProvider>
